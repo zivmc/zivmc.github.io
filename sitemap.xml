@@ -3,17 +3,17 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://zivmc.github.io/</loc>
-    <lastmod>2019-09-29T09:37:56+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://zivmc.github.io/posts/</loc>
     <lastmod>2019-09-29T09:37:56+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/posts/test/</loc>
+    <lastmod>2019-09-29T09:37:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/</loc>
     <lastmod>2019-09-29T09:37:56+08:00</lastmod>
   </url>
   
