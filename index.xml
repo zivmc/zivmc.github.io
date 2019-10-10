@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>网站标题</title>
+    <title>Ziv&#39;s Blog</title>
     <link>https://zivmc.github.io/</link>
-    <description>Recent content on 网站标题</description>
+    <description>Recent content on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>© 2019 — Some Author — All rights reserved.</copyright>
+    <language>en-us</language>
     <lastBuildDate>Mon, 30 Sep 2019 10:17:04 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>中文测试</title>
+      <link>https://zivmc.github.io/posts/chinese-test/</link>
+      <pubDate>Thu, 10 Oct 2019 11:35:43 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/chinese-test/</guid>
+      <description>中文测试。</description>
+    </item>
     
     <item>
       <title>Contact</title>
@@ -31,20 +39,11 @@
     </item>
     
     <item>
-      <title>Test</title>
-      <link>https://zivmc.github.io/posts/2019/09/test/</link>
-      <pubDate>Sun, 29 Sep 2019 09:37:56 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/posts/2019/09/test/</guid>
-      <description>Test</description>
-    </item>
-    
-    <item>
       <title>Hello World</title>
-      <link>https://zivmc.github.io/posts/2019/09/hello-world/</link>
+      <link>https://zivmc.github.io/posts/hello-world/</link>
       <pubDate>Fri, 27 Sep 2019 18:03:55 +0800</pubDate>
       
-      <guid>https://zivmc.github.io/posts/2019/09/hello-world/</guid>
+      <guid>https://zivmc.github.io/posts/hello-world/</guid>
       <description>Hello, world!</description>
     </item>
     
