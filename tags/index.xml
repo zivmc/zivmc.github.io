@@ -6,17 +6,35 @@
     <description>Recent content in Tags on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 27 Sep 2019 18:03:55 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 11:35:43 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>test</title>
-      <link>https://zivmc.github.io/tags/test/</link>
+      <title>测试标签3</title>
+      <link>https://zivmc.github.io/tags/%E6%B5%8B%E8%AF%95%E6%A0%87%E7%AD%BE3/</link>
+      <pubDate>Thu, 10 Oct 2019 11:35:43 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/tags/%E6%B5%8B%E8%AF%95%E6%A0%87%E7%AD%BE3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>test_tag1</title>
+      <link>https://zivmc.github.io/tags/test_tag1/</link>
       <pubDate>Fri, 27 Sep 2019 18:03:55 +0800</pubDate>
       
-      <guid>https://zivmc.github.io/tags/test/</guid>
+      <guid>https://zivmc.github.io/tags/test_tag1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>test_tag2</title>
+      <link>https://zivmc.github.io/tags/test_tag2/</link>
+      <pubDate>Fri, 27 Sep 2019 18:03:55 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/tags/test_tag2/</guid>
       <description></description>
     </item>
     
