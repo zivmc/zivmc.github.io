@@ -6,27 +6,20 @@
     <description>Recent content in Posts on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Oct 2019 11:35:43 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 01:07:49 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>中文测试</title>
-      <link>https://zivmc.github.io/posts/chinese-test/</link>
-      <pubDate>Thu, 10 Oct 2019 11:35:43 +0800</pubDate>
+      <title>从 Android 6.0 factory image 中提取驱动</title>
+      <link>https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/</link>
+      <pubDate>Thu, 10 Oct 2019 01:07:49 +0800</pubDate>
       
-      <guid>https://zivmc.github.io/posts/chinese-test/</guid>
-      <description>中文测试。</description>
-    </item>
-    
-    <item>
-      <title>Hello World</title>
-      <link>https://zivmc.github.io/posts/hello-world/</link>
-      <pubDate>Fri, 27 Sep 2019 18:03:55 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/posts/hello-world/</guid>
-      <description>Hello, world!</description>
+      <guid>https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/</guid>
+      <description>背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
+准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
+diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh +++ b/scripts/generate-vendor.sh @@ -217,6 +217,10 @@ extract_blobs() { # writing to destination) outPath=&amp;#34;$outBase/$dstDir/$(basename &amp;#34;$src&amp;#34;)&amp;#34; + if test -f &amp;#34;$outPath&amp;#34;; then + chmod +rwx $outPath + fi + cp -a &amp;#34;$inDir/$src&amp;#34; &amp;#34;$outPath&amp;#34; || { echo &amp;#34;[-] Failed to copy &amp;#39;$src&amp;#39;&amp;#34; abort 1 -- 2.</description>
     </item>
     
   </channel>

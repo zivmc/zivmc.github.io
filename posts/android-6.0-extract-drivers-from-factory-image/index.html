@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>从 Android 6.0 factory image 中提取驱动 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="从 Android 6.0 factory image 中提取驱动" />
+<meta property="og:description" content="背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
+准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
+diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh &#43;&#43;&#43; b/scripts/generate-vendor.sh @@ -217,6 &#43;217,10 @@ extract_blobs() { # writing to destination) outPath=&#34;$outBase/$dstDir/$(basename &#34;$src&#34;)&#34; &#43; if test -f &#34;$outPath&#34;; then &#43; chmod &#43;rwx $outPath &#43; fi &#43; cp -a &#34;$inDir/$src&#34; &#34;$outPath&#34; || { echo &#34;[-] Failed to copy &#39;$src&#39;&#34; abort 1 -- 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/" />
+<meta property="article:published_time" content="2019-10-10T01:07:49+08:00" />
+<meta property="article:modified_time" content="2019-10-10T01:07:49+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="从 Android 6.0 factory image 中提取驱动"/>
+<meta name="twitter:description" content="背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
+准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
+diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh &#43;&#43;&#43; b/scripts/generate-vendor.sh @@ -217,6 &#43;217,10 @@ extract_blobs() { # writing to destination) outPath=&#34;$outBase/$dstDir/$(basename &#34;$src&#34;)&#34; &#43; if test -f &#34;$outPath&#34;; then &#43; chmod &#43;rwx $outPath &#43; fi &#43; cp -a &#34;$inDir/$src&#34; &#34;$outPath&#34; || { echo &#34;[-] Failed to copy &#39;$src&#39;&#34; abort 1 -- 2."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/categories">Categories</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/contact">Contact</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+    <div class="post-header">
+        <h1 class="title">从 Android 6.0 factory image 中提取驱动</h1>
+        <div class="meta">Posted at &mdash; Oct 10, 2019</div>
+            
+            Categories &#x5b;
+            <a href="https://zivmc.github.io/categories/tech/">tech</a>
+            &#x5d;
+            Tags &#x5b;
+            <a href="https://zivmc.github.io/tags/android/">Android</a>
+            &#x5d;
+
+		<div class="markdown">
+			
+
+<p>背景是 Google 的 <a href="https://developers.google.com/android/drivers">Driver Binaries</a> 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 <a href="https://github.com/anestisb/android-prepare-vendor">android-prepare-vendor</a> 工具从 factory image 中提取驱动的方法。</p>
+
+<h3 id="准备">准备</h3>
+
+<h4 id="工具">工具</h4>
+
+<ul>
+<li><a href="https://github.com/anestisb/android-prepare-vendor">android-prepare-vendor</a> 工具</li>
+<li>android-prepare-vendor 依赖的其他工具，<a href="https://github.com/anestisb/android-simg2img">android-simg2img</a>、<a href="https://github.com/anestisb/dexRepair">dexRepair</a> 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装</li>
+</ul>
+
+<h4 id="修改-android-prepare-vendor">修改 android-prepare-vendor</h4>
+
+<p>我使用的最新 commit 为 <code>e853d17c89f6962d3fd6f408db8576e6b445f643</code> 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh
+index b7c96a5..a601ac4 100755
+--- a/scripts/generate-vendor.sh
++++ b/scripts/generate-vendor.sh
+@@ -217,6 +217,10 @@ extract_blobs() {
+     # writing to destination)
+     outPath=&#34;$outBase/$dstDir/$(basename &#34;$src&#34;)&#34;
+ 
++    if test -f &#34;$outPath&#34;; then
++        chmod +rwx $outPath
++    fi
++
+     cp -a &#34;$inDir/$src&#34; &#34;$outPath&#34; || {
+       echo &#34;[-] Failed to copy &#39;$src&#39;&#34;
+       abort 1
+-- 
+2.7.4</pre></div>
+<p>patch 实际就是在拷贝某些文件前，更改目标文件的权限，确保能拷贝过去。 权限问题可能是由环境问题导致的，所以上面这个补丁可以根据运行 android-prepare-vendor 是否提示文件权限问题，再决定打不打。</p>
+
+<h4 id="镜像">镜像</h4>
+
+<p>即你所使用的 Android 源码分支对应的 factory image，以下以提取 android-6.0.0_r25 对应的 Nexus 5X 驱动为例。</p>
+
+<p>首先在 <a href="https://source.android.com/setup/start/build-numbers#source-code-tags-and-builds">Source code tags and builds</a> 页面找到 android-6.0.0_r25 对应的 build 号为 MDB08L.</p>
+
+<p>然后在 <a href="https://developers.google.com/android/images">Factory Images for Nexus and Pixel Devices</a> 页面查找 Nexus 5X 的 MDB08L 版本的镜像，把镜像放在 android-prepare-vendor 工具的根目录（或者其他任意目录）下：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">~/android-prepare-vendor/bullhead-mdb08l-factory-69995ae9.zip</pre></div>
+<h4 id="准备输出文件夹">准备输出文件夹</h4>
+
+<p>可以是任意目录，比如</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">~/android-prepare-vendor/bullhead_outputs</pre></div>
+<h3 id="提取镜像">提取镜像</h3>
+
+<p>在 <code>~/android-prepare-vendor</code> 目录下运行如下命令：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">./execute-all.sh -d bullhead -b MDB08L -o ./bullhead_outputs -i ./bullhead-mdb08l-factory-69995ae9.zip -k</pre></div>
+<p>前面也说到过，android-prepare-vendor 依赖一些其他的工具，如果运行上面的命令提示 <code>xxx command not found</code>，需要下载安装相应的工具。</p>
+
+<p>运行成功后，在 <code>~/android-prepare-vendor/bullhead_outputs/bullhead/mdb08l</code> 下的 <code>vendor</code> 目录即为提取出来的驱动文件夹，将其拷贝到 Android 源码下的 vendor 目录中即可。</p>
+
+<p>注：
+vendor 目录下直接生成的一些文件权限是只读的，如果拷贝到 Android 源码下后，编译 Android 源码提示权限问题，需要使用 chmod 命令更改文件权限。</p>
+
+		</div></div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+<script>feather.replace()</script>
+</body>
+</html>

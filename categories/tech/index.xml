@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ziv&#39;s Blog</title>
-    <link>https://zivmc.github.io/</link>
-    <description>Recent content on Ziv&#39;s Blog</description>
+    <title>tech on Ziv&#39;s Blog</title>
+    <link>https://zivmc.github.io/categories/tech/</link>
+    <description>Recent content in tech on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Sep 2019 10:17:04 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 01:07:49 +0800</lastBuildDate>
     
-	<atom:link href="https://zivmc.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://zivmc.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,24 +20,6 @@
       <description>背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
 准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
 diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh +++ b/scripts/generate-vendor.sh @@ -217,6 +217,10 @@ extract_blobs() { # writing to destination) outPath=&amp;#34;$outBase/$dstDir/$(basename &amp;#34;$src&amp;#34;)&amp;#34; + if test -f &amp;#34;$outPath&amp;#34;; then + chmod +rwx $outPath + fi + cp -a &amp;#34;$inDir/$src&amp;#34; &amp;#34;$outPath&amp;#34; || { echo &amp;#34;[-] Failed to copy &amp;#39;$src&amp;#39;&amp;#34; abort 1 -- 2.</description>
-    </item>
-    
-    <item>
-      <title>Contact</title>
-      <link>https://zivmc.github.io/contact/</link>
-      <pubDate>Mon, 30 Sep 2019 10:19:51 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/contact/</guid>
-      <description>This is the contact page.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://zivmc.github.io/about/</link>
-      <pubDate>Mon, 30 Sep 2019 10:12:34 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/about/</guid>
-      <description>About me page.</description>
     </item>
     
   </channel>
