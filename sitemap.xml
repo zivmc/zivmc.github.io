@@ -3,27 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://zivmc.github.io/tags/android/</loc>
-    <lastmod>2019-10-10T01:07:49+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://zivmc.github.io/categories/</loc>
-    <lastmod>2019-10-10T01:07:49+08:00</lastmod>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/posts/</loc>
-    <lastmod>2019-10-10T01:07:49+08:00</lastmod>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/python/</loc>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/python-subprocess-capture-output/</loc>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/tags/</loc>
-    <lastmod>2019-10-10T01:07:49+08:00</lastmod>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/categories/tech/</loc>
+    <lastmod>2019-10-28T16:50:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/android/</loc>
     <lastmod>2019-10-10T01:07:49+08:00</lastmod>
   </url>
   
