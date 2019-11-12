@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Android on Ziv&#39;s Blog</title>
-    <link>https://zivmc.github.io/tags/android/</link>
-    <description>Recent content in Android on Ziv&#39;s Blog</description>
+    <title>kernel on Ziv&#39;s Blog</title>
+    <link>https://zivmc.github.io/tags/kernel/</link>
+    <description>Recent content in kernel on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 01 Nov 2019 10:32:04 +0800</lastBuildDate>
     
-	<atom:link href="https://zivmc.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://zivmc.github.io/tags/kernel/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -26,17 +26,6 @@ git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm 下载代码之后需要�
 git branch -a | grep &amp;#34;3.10&amp;#34; | grep &amp;#34;bullhead&amp;#34; | grep &amp;#34;oreo&amp;#34; 从结果中选一个分支 checkout 出来：
 git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。
  编译内核 编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可：</description>
-    </item>
-    
-    <item>
-      <title>从 Android 6.0 factory image 中提取驱动</title>
-      <link>https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/</link>
-      <pubDate>Thu, 10 Oct 2019 01:07:49 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/</guid>
-      <description>背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
-准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
-diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh +++ b/scripts/generate-vendor.sh @@ -217,6 +217,10 @@ extract_blobs() { # writing to destination) outPath=&amp;#34;$outBase/$dstDir/$(basename &amp;#34;$src&amp;#34;)&amp;#34; + if test -f &amp;#34;$outPath&amp;#34;; then + chmod +rwx $outPath + fi + cp -a &amp;#34;$inDir/$src&amp;#34; &amp;#34;$outPath&amp;#34; || { echo &amp;#34;[-] Failed to copy &amp;#39;$src&amp;#39;&amp;#34; abort 1 -- 2.</description>
     </item>
     
   </channel>

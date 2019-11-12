@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Oct 2019 16:50:52 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 10:32:04 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Android</title>
+      <link>https://zivmc.github.io/tags/android/</link>
+      <pubDate>Fri, 01 Nov 2019 10:32:04 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/tags/android/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kernel</title>
+      <link>https://zivmc.github.io/tags/kernel/</link>
+      <pubDate>Fri, 01 Nov 2019 10:32:04 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/tags/kernel/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Python</title>
@@ -17,15 +35,6 @@
       <pubDate>Mon, 28 Oct 2019 16:50:52 +0800</pubDate>
       
       <guid>https://zivmc.github.io/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Android</title>
-      <link>https://zivmc.github.io/tags/android/</link>
-      <pubDate>Thu, 10 Oct 2019 01:07:49 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/tags/android/</guid>
       <description></description>
     </item>
     

@@ -6,10 +6,27 @@
     <description>Recent content in Posts on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Oct 2019 16:50:52 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 10:32:04 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Nexus 5X 编译替换 AOSP msm 内核</title>
+      <link>https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/</link>
+      <pubDate>Fri, 01 Nov 2019 10:32:04 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/</guid>
+      <description>最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。
+下载代码 Google 其实给了编译内核的文档，在这里。
+ 上面的链接是 Pixel 之前设备的内核编译方法，Google 为 Pixel 之后的设备做了另一套编译工具，在上面的页面中也可以找到链接。
+ 下载 msm 内核代码就直接使用 git：
+git clone https://android.googlesource.com/kernel/msm 如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：
+git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm 下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):
+git branch -a | grep &amp;#34;3.10&amp;#34; | grep &amp;#34;bullhead&amp;#34; | grep &amp;#34;oreo&amp;#34; 从结果中选一个分支 checkout 出来：
+git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。
+ 编译内核 编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可：</description>
+    </item>
     
     <item>
       <title>subprocess 模块使用 bash 运行命令并捕捉输出</title>
