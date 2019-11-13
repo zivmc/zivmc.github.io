@@ -4,36 +4,61 @@
   
   <url>
     <loc>https://zivmc.github.io/tags/android/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/hal-examples-from-kernel-driver-to-an-application/</loc>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/categories/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/tags/kernel/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/posts/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/tags/</loc>
-    <lastmod>2019-11-01T10:32:04+08:00</lastmod>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/categories/tech/</loc>
+    <lastmod>2019-11-12T19:29:38+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/c/</loc>
+    <lastmod>2019-11-10T11:31:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/openssl/</loc>
+    <lastmod>2019-11-10T11:31:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/signature/</loc>
+    <lastmod>2019-11-10T11:31:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</loc>
+    <lastmod>2019-11-10T11:31:17+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/</loc>
     <lastmod>2019-11-01T10:32:04+08:00</lastmod>
   </url>
   

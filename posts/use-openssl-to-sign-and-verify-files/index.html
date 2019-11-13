@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>使用 openssl 对文件签名和验签 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="使用 openssl 对文件签名和验签" />
+<meta property="og:description" content="这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
+ 其中 C 程序验签的例子来自 PAGE FAULT BLOG，原文没有签名的例子，这里补上了。
+ 文件签名和验签 签名 有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。
+验签 私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。
+openssl 命令行工具使用 生成私钥 private.pem:
+openssl genrsa -out private.pem 1024 生成公钥：
+openssl rsa -in private.pem -pubout -out public.pem 计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:
+openssl dgst -sha256 -sign private.pem -out test.sig test.txt 使用公钥验证签名：
+openssl dgst -sha256 -verify public." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/" />
+<meta property="article:published_time" content="2019-11-10T11:31:17+08:00" />
+<meta property="article:modified_time" content="2019-11-10T11:31:17+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 openssl 对文件签名和验签"/>
+<meta name="twitter:description" content="这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
+ 其中 C 程序验签的例子来自 PAGE FAULT BLOG，原文没有签名的例子，这里补上了。
+ 文件签名和验签 签名 有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。
+验签 私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。
+openssl 命令行工具使用 生成私钥 private.pem:
+openssl genrsa -out private.pem 1024 生成公钥：
+openssl rsa -in private.pem -pubout -out public.pem 计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:
+openssl dgst -sha256 -sign private.pem -out test.sig test.txt 使用公钥验证签名：
+openssl dgst -sha256 -verify public."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/categories">Categories</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/contact">Contact</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+    <div class="post-header">
+        <h1 class="title">使用 openssl 对文件签名和验签</h1>
+        <div class="meta">Posted at &mdash; Nov 10, 2019</div>
+            
+            Categories &#x5b;
+            <a href="https://zivmc.github.io/categories/tech/">tech</a>
+            &#x5d;
+            Tags &#x5b;
+            <a href="https://zivmc.github.io/tags/openssl/">openssl</a>
+            <a href="https://zivmc.github.io/tags/signature/">signature</a>
+            <a href="https://zivmc.github.io/tags/c/">C</a>
+            &#x5d;
+
+		<div class="markdown">
+			
+
+<p>这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。</p>
+
+<blockquote>
+<p>其中 C 程序验签的例子来自 <a href="https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/">PAGE FAULT BLOG</a>，原文没有签名的例子，这里补上了。</p>
+</blockquote>
+
+<h2 id="文件签名和验签">文件签名和验签</h2>
+
+<h3 id="签名">签名</h3>
+
+<p>有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。</p>
+
+<h3 id="验签">验签</h3>
+
+<p>私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。</p>
+
+<h2 id="openssl-命令行工具使用">openssl 命令行工具使用</h2>
+
+<p>生成私钥 private.pem:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">openssl genrsa -out private.pem 1024</pre></div>
+<p>生成公钥：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">openssl rsa -in private.pem -pubout -out public.pem</pre></div>
+<p>计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">openssl dgst -sha256 -sign private.pem -out test.sig test.txt</pre></div>
+<p>使用公钥验证签名：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">openssl dgst -sha256 -verify public.pem -signature test.sig test.txt</pre></div>
+<p>输出 &ldquo;Verified OK&rdquo; 则签名、文件一致。</p>
+
+<h2 id="c-程序使用-openssl-签名和验签">C 程序使用 openssl 签名和验签</h2>
+
+<p>签名：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* sign.c */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;openssl/pem.h&gt;
+#include &lt;openssl/rsa.h&gt;
+#include &lt;openssl/sha.h&gt;
+
+// Buffer for file read operations. The buffer must be able to accomodate
+// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
+#define BUFFER_SIZE 512
+static unsigned char buffer[BUFFER_SIZE];
+
+int main(int argc, char *argv[])
+{
+    if(argc != 3) {
+        fprintf(stderr, &#34;Usage: %s datafile private_key\n&#34;, argv[0]);
+        return -1;
+    }
+    const char* filename = argv[1];
+    const char* private_key_file = argv[2];
+
+    unsigned char* sig = NULL;
+    unsigned int sig_len = 0;
+
+    unsigned bytes = 0;
+
+    // Calculate SHA256 digest for datafile
+    FILE* datafile = fopen(filename , &#34;rb&#34;);
+
+    // Buffer to hold the calculated digest
+    unsigned char digest[SHA256_DIGEST_LENGTH];
+    SHA256_CTX ctx;
+    SHA256_Init(&amp;ctx);
+
+    // Read data in chunks and feed it to OpenSSL SHA256
+    while((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
+        SHA256_Update(&amp;ctx, buffer, bytes);
+    }
+
+    // get datafile digest
+    SHA256_Final(digest, &amp;ctx);
+    fclose(datafile);
+
+    // read private_key and save it to RSA structure
+    FILE* prikey = fopen(private_key_file, &#34;r&#34;);
+    RSA* rsa_prikey = PEM_read_RSAPrivateKey(prikey, NULL, NULL, NULL);
+
+    // allocate space for signature, signature size should match rsa_prikey type
+    sig = malloc(RSA_size(rsa_prikey));
+
+    // sign digest, writing signature and length of signature to sig and sig_len
+    int result = RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH,
+                            sig, &amp;sig_len, rsa_prikey);
+    RSA_free(rsa_prikey);
+    fclose(prikey);
+
+    if(result == 1)
+    {
+        printf(&#34;Signing succeed\n&#34;);
+        FILE* sig_file = fopen(&#34;./sig_output.sig&#34;, &#34;w&#34;);
+        fprintf(sig_file, &#34;%s&#34;, sig);
+        fclose(sig_file);
+        return 0;
+    } else {
+        printf(&#34;Signing failed\n&#34;);
+        return -1;
+    }
+}</pre></div>
+<p>以下验签的代码来自 <a href="https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/">PAGE FAULT BLOG</a>：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* verify.c
+ * https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;openssl/pem.h&gt;
+#include &lt;openssl/rsa.h&gt;
+#include &lt;openssl/sha.h&gt;
+
+// Buffer for file read operations. The buffer must be able to accomodate
+// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
+#define BUFFER_SIZE 512
+static unsigned char buffer[BUFFER_SIZE];
+
+int main(int argc, char *argv[])
+{
+    if(argc != 4) {
+        fprintf(stderr, &#34;Usage: %s datafile signature_file public_key\n&#34;, argv[0]);
+        return -1;
+    }
+    const char* filename = argv[1];
+    const char* sigfile = argv[2];
+    const char* pubkeyfile = argv[3];
+
+    unsigned bytes = 0;
+
+    // Calculate SHA256 digest for datafile
+    FILE* datafile = fopen(filename , &#34;rb&#34;);
+
+    // Buffer to hold the calculated digest
+    unsigned char digest[SHA256_DIGEST_LENGTH];
+    SHA256_CTX ctx;
+    SHA256_Init(&amp;ctx);
+
+    // Read data in chunks and feed it to OpenSSL SHA256
+    while((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
+        SHA256_Update(&amp;ctx, buffer, bytes);
+    }
+
+    SHA256_Final(digest, &amp;ctx);
+    fclose(datafile);
+
+    // Read signature from file
+    FILE* sign = fopen (sigfile , &#34;r&#34;);
+
+    bytes = fread(buffer, 1, BUFFER_SIZE, sign);
+    fclose(sign);
+
+    // Verify that calculated digest and signature match
+    FILE* pubkey = fopen(pubkeyfile, &#34;r&#34;);
+
+    // Read public key from file
+    RSA* rsa_pubkey = PEM_read_RSA_PUBKEY(pubkey, NULL, NULL, NULL);
+
+    // Decrypt signature (in buffer) and verify it matches
+    // with the digest calculated from data file.
+    int result = RSA_verify(NID_sha256, digest, SHA256_DIGEST_LENGTH,
+                            buffer, bytes, rsa_pubkey);
+    RSA_free(rsa_pubkey);
+    fclose(pubkey);
+
+    if(result == 1) {
+        printf(&#34;Signature is valid\n&#34;);
+        return 0;
+    } else {
+        printf(&#34;Signature is invalid\n&#34;);
+        return 1;
+    }
+}</pre></div>
+<p>编译：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">gcc verify.c -lcrypto -o verify
+gcc sign.c -lcrypto -o sign</pre></div>
+<p>使用：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">./sign test.txt private.pem
+./verify test.txt sig_output.sig public.pem</pre></div>
+<p>下面是几个接口的文档链接：</p>
+
+<ul>
+<li><a href="https://www.openssl.org/docs/manmaster/man3/RSA_sign.html">RSA_sign 和 RSA_verify</a></li>
+<li><a href="https://www.openssl.org/docs/manmaster/man3/PEM_read_RSAPrivateKey.html">read/write keys</a></li>
+</ul>
+
+		</div></div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+<script>feather.replace()</script>
+</body>
+</html>

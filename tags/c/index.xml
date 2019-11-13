@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C on Ziv&#39;s Blog</title>
+    <link>https://zivmc.github.io/tags/c/</link>
+    <description>Recent content in C on Ziv&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 10 Nov 2019 11:31:17 +0800</lastBuildDate>
+    
+	<atom:link href="https://zivmc.github.io/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用 openssl 对文件签名和验签</title>
+      <link>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</link>
+      <pubDate>Sun, 10 Nov 2019 11:31:17 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</guid>
+      <description>这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
+ 其中 C 程序验签的例子来自 PAGE FAULT BLOG，原文没有签名的例子，这里补上了。
+ 文件签名和验签 签名 有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。
+验签 私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。
+openssl 命令行工具使用 生成私钥 private.pem:
+openssl genrsa -out private.pem 1024 生成公钥：
+openssl rsa -in private.pem -pubout -out public.pem 计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:
+openssl dgst -sha256 -sign private.pem -out test.sig test.txt 使用公钥验证签名：
+openssl dgst -sha256 -verify public.</description>
+    </item>
+    
+  </channel>
+</rss>

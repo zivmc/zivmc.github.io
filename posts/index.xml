@@ -6,10 +6,43 @@
     <description>Recent content in Posts on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Nov 2019 10:32:04 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 12 Nov 2019 19:29:38 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Android 硬件抽象层相关的一组例子</title>
+      <link>https://zivmc.github.io/posts/hal-examples-from-kernel-driver-to-an-application/</link>
+      <pubDate>Tue, 12 Nov 2019 19:29:38 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/hal-examples-from-kernel-driver-to-an-application/</guid>
+      <description>最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：
+ 在内核中添加一个字符设备驱动 在硬件抽象层添加对应的硬件抽象层模块 在 Framework 和 Native Framework 层添加访问服务 最后开发一个 Android 应用使用 Framework 层的服务  原书使用的代码比较老，Android 版本是 2.3.1，内核版本是 2.6.29，例子中的很多代码在较新版本的 Android 上已经不再适用。这里对书中的例子做了一些修改，使之能在较新版本的 Android 设备上运行和调试。
+这里使用的环境：
+ 设备是 Nexus 5X（bullhead） Android 版本是 android-8.1.0_r1，lunch 选项是 aosp_bullhead-userdebug 内核分支是 remotes/origin/android-msm-bullhead-3.10-oreo-mr1  用文字讲代码实在是一件很吃力的事情，因此这里直接给出以下所有代码的 链接，以下只简单介绍代码做了什么，适配了哪些地方等。
+向内核添加驱动程序 书中这部分代码用到的一些接口在 v3.10 的内核上已经不再可用，这里直接使用 http://derekmolloy.ie 给出的添加驱动程序的代码。
+ebbchar.c 即为驱动的代码，作用是创建 /dev/ebbchar 这个设备，并实现对这个设备进行读写时的处理操作。用户可以使用 read 和 write 函数对 /dev/ebbchar 这个设备进行字符串的读写。
+ebbchar.c 置于 &amp;ldquo;kernel/drivers/ebbchar/&amp;rdquo; 目录下，并添加、修改相关的 Kconfig、Makefile 文件之后，重新编译内核即可。
+ 编译和替换内核在 Nexus 5X 编译替换 AOSP msm 内核 这篇文章里有介绍。</description>
+    </item>
+    
+    <item>
+      <title>使用 openssl 对文件签名和验签</title>
+      <link>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</link>
+      <pubDate>Sun, 10 Nov 2019 11:31:17 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</guid>
+      <description>这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
+ 其中 C 程序验签的例子来自 PAGE FAULT BLOG，原文没有签名的例子，这里补上了。
+ 文件签名和验签 签名 有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。
+验签 私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。
+openssl 命令行工具使用 生成私钥 private.pem:
+openssl genrsa -out private.pem 1024 生成公钥：
+openssl rsa -in private.pem -pubout -out public.pem 计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:
+openssl dgst -sha256 -sign private.pem -out test.sig test.txt 使用公钥验证签名：
+openssl dgst -sha256 -verify public.</description>
+    </item>
     
     <item>
       <title>Nexus 5X 编译替换 AOSP msm 内核</title>

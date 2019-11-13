@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Android 硬件抽象层相关的一组例子 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Android 硬件抽象层相关的一组例子" />
+<meta property="og:description" content="最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：
+ 在内核中添加一个字符设备驱动 在硬件抽象层添加对应的硬件抽象层模块 在 Framework 和 Native Framework 层添加访问服务 最后开发一个 Android 应用使用 Framework 层的服务  原书使用的代码比较老，Android 版本是 2.3.1，内核版本是 2.6.29，例子中的很多代码在较新版本的 Android 上已经不再适用。这里对书中的例子做了一些修改，使之能在较新版本的 Android 设备上运行和调试。
+这里使用的环境：
+ 设备是 Nexus 5X（bullhead） Android 版本是 android-8.1.0_r1，lunch 选项是 aosp_bullhead-userdebug 内核分支是 remotes/origin/android-msm-bullhead-3.10-oreo-mr1  用文字讲代码实在是一件很吃力的事情，因此这里直接给出以下所有代码的 链接，以下只简单介绍代码做了什么，适配了哪些地方等。
+向内核添加驱动程序 书中这部分代码用到的一些接口在 v3.10 的内核上已经不再可用，这里直接使用 http://derekmolloy.ie 给出的添加驱动程序的代码。
+ebbchar.c 即为驱动的代码，作用是创建 /dev/ebbchar 这个设备，并实现对这个设备进行读写时的处理操作。用户可以使用 read 和 write 函数对 /dev/ebbchar 这个设备进行字符串的读写。
+ebbchar.c 置于 &ldquo;kernel/drivers/ebbchar/&rdquo; 目录下，并添加、修改相关的 Kconfig、Makefile 文件之后，重新编译内核即可。
+ 编译和替换内核在 Nexus 5X 编译替换 AOSP msm 内核 这篇文章里有介绍。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zivmc.github.io/posts/hal-examples-from-kernel-driver-to-an-application/" />
+<meta property="article:published_time" content="2019-11-12T19:29:38+08:00" />
+<meta property="article:modified_time" content="2019-11-12T19:29:38+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android 硬件抽象层相关的一组例子"/>
+<meta name="twitter:description" content="最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：
+ 在内核中添加一个字符设备驱动 在硬件抽象层添加对应的硬件抽象层模块 在 Framework 和 Native Framework 层添加访问服务 最后开发一个 Android 应用使用 Framework 层的服务  原书使用的代码比较老，Android 版本是 2.3.1，内核版本是 2.6.29，例子中的很多代码在较新版本的 Android 上已经不再适用。这里对书中的例子做了一些修改，使之能在较新版本的 Android 设备上运行和调试。
+这里使用的环境：
+ 设备是 Nexus 5X（bullhead） Android 版本是 android-8.1.0_r1，lunch 选项是 aosp_bullhead-userdebug 内核分支是 remotes/origin/android-msm-bullhead-3.10-oreo-mr1  用文字讲代码实在是一件很吃力的事情，因此这里直接给出以下所有代码的 链接，以下只简单介绍代码做了什么，适配了哪些地方等。
+向内核添加驱动程序 书中这部分代码用到的一些接口在 v3.10 的内核上已经不再可用，这里直接使用 http://derekmolloy.ie 给出的添加驱动程序的代码。
+ebbchar.c 即为驱动的代码，作用是创建 /dev/ebbchar 这个设备，并实现对这个设备进行读写时的处理操作。用户可以使用 read 和 write 函数对 /dev/ebbchar 这个设备进行字符串的读写。
+ebbchar.c 置于 &ldquo;kernel/drivers/ebbchar/&rdquo; 目录下，并添加、修改相关的 Kconfig、Makefile 文件之后，重新编译内核即可。
+ 编译和替换内核在 Nexus 5X 编译替换 AOSP msm 内核 这篇文章里有介绍。"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/categories">Categories</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/contact">Contact</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+    <div class="post-header">
+        <h1 class="title">Android 硬件抽象层相关的一组例子</h1>
+        <div class="meta">Posted at &mdash; Nov 12, 2019</div>
+            
+            Categories &#x5b;
+            <a href="https://zivmc.github.io/categories/tech/">tech</a>
+            &#x5d;
+            Tags &#x5b;
+            <a href="https://zivmc.github.io/tags/kernel/">kernel</a>
+            <a href="https://zivmc.github.io/tags/android/">Android</a>
+            &#x5d;
+
+		<div class="markdown">
+			
+
+<p>最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：</p>
+
+<ul>
+<li>在内核中添加一个字符设备驱动</li>
+<li>在硬件抽象层添加对应的硬件抽象层模块</li>
+<li>在 Framework 和 Native Framework 层添加访问服务</li>
+<li>最后开发一个 Android 应用使用 Framework 层的服务</li>
+</ul>
+
+<p>原书使用的代码比较老，Android 版本是 2.3.1，内核版本是 2.6.29，例子中的很多代码在较新版本的 Android 上已经不再适用。这里对书中的例子做了一些修改，使之能在较新版本的 Android 设备上运行和调试。</p>
+
+<p>这里使用的环境：</p>
+
+<ul>
+<li>设备是 Nexus 5X（bullhead）</li>
+<li>Android 版本是 android-8.1.0_r1，lunch 选项是 aosp_bullhead-userdebug</li>
+<li>内核分支是 remotes/origin/android-msm-bullhead-3.10-oreo-mr1</li>
+</ul>
+
+<p><strong>用文字讲代码实在是一件很吃力的事情，因此这里直接给出以下所有代码的 <a href="https://github.com/zivmc/codebase-public/tree/master/Android/hal_examples">链接</a>，以下只简单介绍代码做了什么，适配了哪些地方等。</strong></p>
+
+<h2 id="向内核添加驱动程序">向内核添加驱动程序</h2>
+
+<p>书中这部分代码用到的一些接口在 v3.10 的内核上已经不再可用，这里直接使用 <a href="http://derekmolloy.ie/writing-a-linux-kernel-module-part-2-a-character-device/">http://derekmolloy.ie</a> 给出的添加驱动程序的代码。</p>
+
+<p>ebbchar.c 即为驱动的代码，作用是创建 /dev/ebbchar 这个设备，并实现对这个设备进行读写时的处理操作。用户可以使用 read 和 write 函数对 /dev/ebbchar 这个设备进行字符串的读写。</p>
+
+<p>ebbchar.c 置于 &ldquo;kernel/drivers/ebbchar/&rdquo; 目录下，并添加、修改相关的 Kconfig、Makefile 文件之后，重新编译内核即可。</p>
+
+<blockquote>
+<p>编译和替换内核在 <a href="https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/">Nexus 5X 编译替换 AOSP msm 内核</a> 这篇文章里有介绍。</p>
+</blockquote>
+
+<p>还有一个简单的 C 程序可以在替换内核之后测试 /dev/ebbchar 这个设备的功能，代码位于 &ldquo;external/ebbchar_test&rdquo; 目录，使用 mm 命令编译之后，把生成的可执行文件推送到设备上运行即可。</p>
+
+<h2 id="添加硬件抽象层模块">添加硬件抽象层模块</h2>
+
+<h3 id="模块实现">模块实现</h3>
+
+<p>硬件抽象层模块代码位于 &ldquo;hardware/libhardware/modules&rdquo; 目录，把添加的模块代码放在这里即可。</p>
+
+<p>ebbchar 模块中，ebbchar_module_t 这个 struct 用来描述模块本身，ebbchar_device_t 用来描述模块管理的设备。模块的用户通过调用 libhardware 中的 hw_get_module 函数获取 module 对象，调用 ebbchar_device_open 函数通过 module 对象获取设备对象。在获取设备对象时，ebbchar_device_t 的 fd 成员变量会被置为打开 /dev/ebbchar 返回的 fd，这样 ebbchar_device_t 就跟 /dev/ebbchar 这个设备关联到一起了。</p>
+
+<p>ebbchar_set_input 和 ebbchar_get_output 两个函数是读写操作的实现，他们都接收 <code>ebbchar_device_t*</code> 类型的参数。这样就可以把上面获取到的设备对象传给这两个函数，从而实现对设备 /dev/ebbchar 的读写。</p>
+
+<p>ebbchar_set_input 和 ebbchar_get_output 两个函数的实现跟原书代码略有不同，原书代码接收 int 类型参数进行字符的读写，这里的实现接收 <code>char*</code> 的参数进行字符串的读写。</p>
+
+<h3 id="模块安装">模块安装</h3>
+
+<p>编译出的模块名为 ebbchar.default.so，被安装到 $OUT/vendor/lib/hw 和 $OUT/vendor/lib64/hw 两个目录。编译出的模块不会被安装到最终的镜像中去，可以重新挂载设备中的 /vendor 分区为可读之后，直接将 so 文件推到设备中去。</p>
+
+<p>重新挂载需要将 Android 源码中以下文件中的 <code>ro.secure=1</code> 修改为 <code>ro.secure=0</code>:</p>
+
+<ol>
+<li>build/core/build-system.html</li>
+<li>build/core/main.mk</li>
+</ol>
+
+<p>重新编译、烧录到设备之后执行：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">adb shell setenforce 0
+adb shell mount -o rw,remount /vendor</pre></div>
+<p>这时可以把编译出的 ebbchar.default.so 推到设备中去：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">adb push $OUT/vendor/lib/hw/ebbchar.default.so /vendor/lib/hw/
+adb push $OUT/vendor/lib64/hw/ebbchar.default.so /vendor/lib64/hw/</pre></div>
+<h2 id="添加访问服务">添加访问服务</h2>
+
+<p>访问服务这里也主要是几个函数的参数类型跟原书不同，直接把代码放到相应文件夹中重新编译即可。</p>
+
+<p>简单介绍一下几个文件：</p>
+
+<ul>
+<li>IEbbcharService.aidl 定义了 EbbcharService 的接口</li>
+<li>EbbcharService.java EbbcharService 的实现，调用了几个 jni 函数</li>
+<li>com_android_server_EbbcharService.cpp 上面几个 jni 函数的实现，调用了 HAL 模块提供的接口</li>
+<li>onload.cpp 把 jni 函数注册到这里，系统起来的时候会去找这里的函数</li>
+<li>SystemServer.java 在 System Server 起来的时候把 EbbcharService 也拉起来</li>
+</ul>
+
+<h2 id="添加-android-app-使用-ebbcharservice">添加 Android App 使用 EbbcharService</h2>
+
+<p>这里没什么好说的，App 源码放到 Android 源码中编译即可。</p>
+
+<h2 id="selinux-的问题">SELinux 的问题</h2>
+
+<p>到这里，编译上面的代码并烧录到设备中，会发现一些 SELinux 相关的权限问题，这些问题在低版本 Android 上是没有的：</p>
+
+<ol>
+<li>EbbcharService 无法被正确添加，原因是缺少 EbbcharService 这个服务相关的 sepolicy 配置项</li>
+<li>/dev/ebbchar 设备无法被读写，原因是缺少 /dev/ebbchar 这个设备相关的 sepolicy 配置项</li>
+</ol>
+
+<p>修改方法是修改源码中的 sepolicy，这里修改 system/sepolicy 下的文件，修改内容在代码中给出来了。</p>
+
+<p>sepolicy 的写法比较复杂，这里暂时也不准备花太多时间学习 sepolicy 的写法，介绍一个取巧的方法，这个方法受 <a href="https://blog.csdn.net/visionliao/article/details/81219692">这篇文章</a> 启发。</p>
+
+<p>上面那篇文章说添加服务的 sepolicy 项可以仿照 vibrator_service 这个服务配置项的写法，也就是在 system/sepolicy 目录下所有出现 vibrator_service 的地方，添加一条 ebbchar_service 的记录。事实也证明这样确实可行，添加之后 EbbcharService 就能正确添加了。</p>
+
+<p>类似地，/dev/ebbchar 这个设备的 sepolicy 项，也可以仿照 ashmem_device 的配置项写法，在所有出现 ashmem_device 的地方，添加一条 ebbchar_device 的记录。添加之后，Android App 就能通过 EbbcharService 和 ebbchar 硬件抽象层模块，向 /dev/ebbchar 这个设备进行读写了。</p>
+
+<p><strong>注意，除非确定使用的 Android 版本是 <code>android-8.1.0_r1</code>，否则不要直接使用给出的 sepolicy 的修改代码。不同 Android 版本的 sepolicy 存在差异，直接替换容易导致系统无法正常启动。</strong></p>
+
+<h2 id="结语">结语</h2>
+
+<p>上面确实是一组非常好的、理解 Android 系统结构的例子。</p>
+
+		</div></div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+<script>feather.replace()</script>
+</body>
+</html>
