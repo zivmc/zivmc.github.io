@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>C on Ziv&#39;s Blog</title>
-    <link>https://zivmc.github.io/tags/c/</link>
-    <description>Recent content in C on Ziv&#39;s Blog</description>
+    <title>gdb on Ziv&#39;s Blog</title>
+    <link>https://zivmc.github.io/tags/gdb/</link>
+    <description>Recent content in gdb on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 13 Nov 2019 17:11:31 +0800</lastBuildDate>
     
-	<atom:link href="https://zivmc.github.io/tags/c/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://zivmc.github.io/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,23 +20,6 @@
       <description>C 的指针这一块学得不是特别好，最近准备深入看一下，这里先用看一下 C 中未初始化的指针相关的问题。
 使用 gdb  编译时输出调试信息：使用 -g 编译选项 打开文件：gdb a.out 查看源码：list 或 l，可以跟行号 设置断点：break 或 b，可以跟行号 开始运行：run 或者 r 继续运行到下一行：next 或者 n 继续运行到下一断点：continue 或者 c 查看进程映射信息：i proc mapping 或者 info proc mapping，可以看到堆和栈的起始地址 查看段映射信息：i files 或者 info files，可以看到每个段的起始和终止地址 打印变量信息：print 或者 p，后面可以跟变量名、表达式等 打印指定地址：x/4xb [addr]，addr 可以是地址，也可以是变量名。b 表示打印字节，x 表示打印 16 进制格式，4 表示打印 4 个（字节）  未初始化的指针 调试代码 下面代码中 gi 是初始化的全局变量，gn 是未初始化的全局变量，spi 是初始化的静态指针变量，spn 是未初始化的静态指针变量，pi2 是未初始化的局部指针变量：
 /* 0.global_and_local.c */ #include &amp;lt;stdio.h&amp;gt; int gi = 5; int gn; static int *spi = &amp;amp;gi; static int *spn; int main() { int j = 6; int *pi = &amp;amp;j; printf(&amp;#34;===== local variables:\n&amp;#34;); printf(&amp;#34;&amp;amp;j: %p\n&amp;#34;, &amp;amp;j); printf(&amp;#34;pi: %p\n&amp;#34;, pi); printf(&amp;#34;&amp;amp;pi: %p\n&amp;#34;, &amp;amp;pi); int *pi2; printf(&amp;#34;pi2: %p\n&amp;#34;, pi2); pi2 = NULL; printf(&amp;#34;pi2: %p\n&amp;#34;, pi2); printf(&amp;#34;\n===== global variables:\n&amp;#34;); printf(&amp;#34;gi: %d\n&amp;#34;, gi); printf(&amp;#34;&amp;amp;gi: %p\n&amp;#34;, &amp;amp;gi); printf(&amp;#34;gn: %d\n&amp;#34;, gn); printf(&amp;#34;&amp;amp;gn: %p\n&amp;#34;, &amp;amp;gn); printf(&amp;#34;spi: %p\n&amp;#34;, spi); printf(&amp;#34;&amp;amp;spi: %p\n&amp;#34;, &amp;amp;spi); printf(&amp;#34;spn: %p\n&amp;#34;, spn); printf(&amp;#34;&amp;amp;spn: %p\n&amp;#34;, &amp;amp;spn); return 0; } 编译 gcc -g 0.</description>
-    </item>
-    
-    <item>
-      <title>使用 openssl 对文件签名和验签</title>
-      <link>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</link>
-      <pubDate>Sun, 10 Nov 2019 11:31:17 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/posts/use-openssl-to-sign-and-verify-files/</guid>
-      <description>这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
- 其中 C 程序验签的例子来自 PAGE FAULT BLOG，原文没有签名的例子，这里补上了。
- 文件签名和验签 签名 有文件 test.txt，使用摘要算法（如 SHA256）计算出文件的摘要，再使用私钥（private.pem）对摘要的内容做加密，就叫做文件签名，摘要加密之后的内容叫做文件的签名（记 test.sig）。
-验签 私钥 private.pem 对应的公钥是 public.pem，使用公钥对 test.sig 解密得到加密前的摘要 digest1，再计算 test.txt 的摘要得到 digest2，如果 digest1 和 digest2 相同，则验签成功。
-openssl 命令行工具使用 生成私钥 private.pem:
-openssl genrsa -out private.pem 1024 生成公钥：
-openssl rsa -in private.pem -pubout -out public.pem 计算 SHA256 摘要并用 private.pem 生成签名文件 test.sig:
-openssl dgst -sha256 -sign private.pem -out test.sig test.txt 使用公钥验证签名：
-openssl dgst -sha256 -verify public.</description>
     </item>
     
   </channel>
