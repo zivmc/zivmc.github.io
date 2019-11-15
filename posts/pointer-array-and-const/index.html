@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>指针、数组和 const - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="指针、数组和 const" />
+<meta property="og:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
+例1：指针与数字相加 /* 1.array.c */ #include &lt;stdio.h&gt; int main() { int a[5] = {0, 1, 2, 3, 4}; int *pi = a; long addr = (long)a; printf(&#34;sizeof a: %lu\n&#34;, sizeof(a)); printf(&#34;count a: %lu\n&#34;, sizeof(a)/sizeof(*a)); printf(&#34;a: %p\n&#34;, a); printf(&#34;a &#43; 1: %p\n&#34;, a &#43; 1); printf(&#34;a &#43; 4: %p\n&#34;, a &#43; 4); printf(&#34;*(a &#43; 1): %d\n&#34;, *(a &#43; 1)); printf(&#34;*(a &#43; 4): %d\n&#34;, *(a &#43; 4)); printf(&#34;&amp;a[0]: %p\n&#34;, &amp;a[0]); printf(&#34;&amp;a[1]: %p\n&#34;, &amp;a[1]); printf(&#34;&amp;a[4]: %p\n&#34;, &amp;a[4]); printf(&#34;pi: %p\n&#34;, pi); printf(&#34;pi &#43; 1: %p\n&#34;, (pi &#43; 1)); printf(&#34;addr: 0x%lx\n&#34;, addr); printf(&#34;addr &#43; 1: 0x%lx\n&#34;, addr &#43; 1); printf(&#34;\nchar array:\n&#34;); char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;}; printf(&#34;sizeof c: %lu\n&#34;, sizeof(c)); printf(&#34;count c: %lu\n&#34;, sizeof(c)/sizeof(*c)); printf(&#34;c: %p\n&#34;, c); printf(&#34;c &#43; 1: %p\n&#34;, c &#43; 1); printf(&#34;*c: %c\n&#34;, *c); printf(&#34;*(c &#43; 1): %c\n&#34;, *(c &#43; 1)); printf(&#34;*c: %u\n&#34;, *c); return 0; }  sizeof(数组名) 返回整个数组占用的字节数 sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8 指针和数组名加 1，得到的都是下一个元素的地址 指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义  例2：指针与字符串 /* 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zivmc.github.io/posts/pointer-array-and-const/" />
+<meta property="article:published_time" content="2019-11-15T14:43:39+08:00" />
+<meta property="article:modified_time" content="2019-11-15T14:43:39+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="指针、数组和 const"/>
+<meta name="twitter:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
+例1：指针与数字相加 /* 1.array.c */ #include &lt;stdio.h&gt; int main() { int a[5] = {0, 1, 2, 3, 4}; int *pi = a; long addr = (long)a; printf(&#34;sizeof a: %lu\n&#34;, sizeof(a)); printf(&#34;count a: %lu\n&#34;, sizeof(a)/sizeof(*a)); printf(&#34;a: %p\n&#34;, a); printf(&#34;a &#43; 1: %p\n&#34;, a &#43; 1); printf(&#34;a &#43; 4: %p\n&#34;, a &#43; 4); printf(&#34;*(a &#43; 1): %d\n&#34;, *(a &#43; 1)); printf(&#34;*(a &#43; 4): %d\n&#34;, *(a &#43; 4)); printf(&#34;&amp;a[0]: %p\n&#34;, &amp;a[0]); printf(&#34;&amp;a[1]: %p\n&#34;, &amp;a[1]); printf(&#34;&amp;a[4]: %p\n&#34;, &amp;a[4]); printf(&#34;pi: %p\n&#34;, pi); printf(&#34;pi &#43; 1: %p\n&#34;, (pi &#43; 1)); printf(&#34;addr: 0x%lx\n&#34;, addr); printf(&#34;addr &#43; 1: 0x%lx\n&#34;, addr &#43; 1); printf(&#34;\nchar array:\n&#34;); char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;}; printf(&#34;sizeof c: %lu\n&#34;, sizeof(c)); printf(&#34;count c: %lu\n&#34;, sizeof(c)/sizeof(*c)); printf(&#34;c: %p\n&#34;, c); printf(&#34;c &#43; 1: %p\n&#34;, c &#43; 1); printf(&#34;*c: %c\n&#34;, *c); printf(&#34;*(c &#43; 1): %c\n&#34;, *(c &#43; 1)); printf(&#34;*c: %u\n&#34;, *c); return 0; }  sizeof(数组名) 返回整个数组占用的字节数 sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8 指针和数组名加 1，得到的都是下一个元素的地址 指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义  例2：指针与字符串 /* 2."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/categories">Categories</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/contact">Contact</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+    <div class="post-header">
+        <h1 class="title">指针、数组和 const</h1>
+        <div class="meta">Posted at &mdash; Nov 15, 2019</div>
+            
+            Categories &#x5b;
+            <a href="https://zivmc.github.io/categories/tech/">tech</a>
+            &#x5d;
+            Tags &#x5b;
+            <a href="https://zivmc.github.io/tags/c/">C</a>
+            &#x5d;
+
+		<div class="markdown">
+			
+
+<p>上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。</p>
+
+<h2 id="例1-指针与数字相加">例1：指针与数字相加</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 1.array.c */
+#include &lt;stdio.h&gt;
+
+int main()
+{
+    int a[5] = {0, 1, 2, 3, 4};
+    int *pi = a;
+    long addr = (long)a;
+
+    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
+    printf(&#34;count a:  %lu\n&#34;, sizeof(a)/sizeof(*a));
+    printf(&#34;a:        %p\n&#34;, a);
+    printf(&#34;a + 1:    %p\n&#34;, a + 1);
+    printf(&#34;a + 4:    %p\n&#34;, a + 4);
+    printf(&#34;*(a + 1): %d\n&#34;, *(a + 1));
+    printf(&#34;*(a + 4): %d\n&#34;, *(a + 4));
+    printf(&#34;&amp;a[0]:    %p\n&#34;, &amp;a[0]);
+    printf(&#34;&amp;a[1]:    %p\n&#34;, &amp;a[1]);
+    printf(&#34;&amp;a[4]:    %p\n&#34;, &amp;a[4]);
+    printf(&#34;pi:       %p\n&#34;, pi);
+    printf(&#34;pi + 1:   %p\n&#34;, (pi + 1));
+
+    printf(&#34;addr:     0x%lx\n&#34;, addr);
+    printf(&#34;addr + 1: 0x%lx\n&#34;, addr + 1);
+
+    printf(&#34;\nchar array:\n&#34;);
+    char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;};
+    printf(&#34;sizeof c: %lu\n&#34;, sizeof(c));
+    printf(&#34;count c:  %lu\n&#34;, sizeof(c)/sizeof(*c));
+    printf(&#34;c:        %p\n&#34;, c);
+    printf(&#34;c + 1:    %p\n&#34;, c + 1);
+    printf(&#34;*c:       %c\n&#34;, *c);
+    printf(&#34;*(c + 1): %c\n&#34;, *(c + 1));
+    printf(&#34;*c:       %u\n&#34;, *c);
+
+    return 0;
+}</pre></div>
+<ul>
+<li>sizeof(数组名) 返回整个数组占用的字节数</li>
+<li>sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8</li>
+<li>指针和数组名加 1，得到的都是下一个元素的地址</li>
+<li>指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义</li>
+</ul>
+
+<h2 id="例2-指针与字符串">例2：指针与字符串</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 2.char_pointer.c */
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+    // &#34;hello&#34; in .rodata
+    char* a = &#34;hello&#34;;
+    printf(&#34;sizeof a:    %lu\n&#34;, sizeof(a));
+    printf(&#34;strlen of a: %lu\n&#34;, strlen(a));
+    printf(&#34;a[0]:        %c\n&#34;, a[0]);
+    printf(&#34;a[5]:        %u\n&#34;, a[5]);
+    printf(&#34;a[6]:        %u\n&#34;, a[6]);
+
+    // &#34;world&#34; in stack
+    char b[] = &#34;world&#34;;
+    printf(&#34;sizeof b:    %lu\n&#34;, sizeof(b));
+    printf(&#34;strlen of b: %lu\n&#34;, strlen(b));
+
+    return 0;
+}</pre></div>
+<p>输出：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sizeof a:    8
+strlen of a: 5
+a[0]:        h
+a[5]:        0
+a[6]:        115
+sizeof b:    6
+strlen of b: 5</pre></div>
+<ul>
+<li><code>char* a = &quot;hello&quot;;</code> 中 a 是一个指针，&rdquo;hello&rdquo; 存储在 .rodata 段，a 中保存的是 &ldquo;hello&rdquo; 的首地址</li>
+<li>strlen(a) 得到的是 &ldquo;hello&rdquo; 不含结尾 &lsquo;\0&rsquo; 的长度，也就是 5；sizeof(a) 是指针的大小也就是 8</li>
+<li><code>char b[] = &quot;world&quot;</code> 中 b 是一个字符数组，&rdquo;world&rdquo; 在栈上，sizeof(b) 包含末尾的 <code>\0</code>，也就是 6</li>
+<li>C 不做数组越界检查，但 <code>a[6]</code> 这种表达式的值是未定义的</li>
+</ul>
+
+<h2 id="例3-char-和-char-a">例3：<code>char**</code> 和 <code>char* a[]</code></h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 3.char_pointer_array.c */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void fun(char** a) {
+    printf(&#34;printing the first elem: %s\n&#34;, *a);
+}
+
+int main()
+{
+    char* a[] = {&#34;This&#34;, &#34;is&#34;, &#34;a&#34;, &#34;sentence&#34;, &#34;.&#34;};
+
+    printf(&#34;a:     %p\n&#34;, a);
+    printf(&#34;*a:    %p\n&#34;, *a);
+    printf(&#34;a[0]:  %p\n&#34;, a[0]);
+    printf(&#34;a[1]:  %p\n&#34;, a[1]);
+    printf(&#34;a[2]:  %p\n&#34;, a[2]);
+    printf(&#34;a[3]:  %p\n&#34;, a[3]);
+    printf(&#34;a[4]:  %p\n&#34;, a[4]);
+    printf(&#34;\naddr of pointers in a:\n&#34;);
+    printf(&#34;&amp;a[0]:  %p\n&#34;, &amp;a[0]);
+    printf(&#34;&amp;a[1]:  %p\n&#34;, &amp;a[1]);
+    printf(&#34;&amp;a[2]:  %p\n&#34;, &amp;a[2]);
+    printf(&#34;&amp;a[3]:  %p\n&#34;, &amp;a[3]);
+    printf(&#34;&amp;a[4]:  %p\n&#34;, &amp;a[4]);
+
+    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
+    printf(&#34;len a:  : %lu\n&#34;, sizeof(a)/sizeof(*a));
+
+    char** b = malloc(4 * sizeof(char*));
+    b[0] = &#34;This&#34;;
+    printf(&#34;b[0]:   %p\n&#34;, b[0]);
+    *(b + 1) = &#34;is&#34;;
+    printf(&#34;b[1]:   %p\n&#34;, b[1]);
+    *(b + 2) = &#34;iis&#34;;
+    printf(&#34;b[2]:   %p\n&#34;, b[2]);
+
+    char** c = a;
+
+    fun(a);
+    fun(b);
+    fun(c);
+
+    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
+    printf(&#34;len of a: %lu\n&#34;, sizeof(a)/sizeof(*a));
+    printf(&#34;sizeof b: %lu\n&#34;, sizeof(b));
+    printf(&#34;len of b: %lu\n&#34;, sizeof(b)/sizeof(*b));
+    printf(&#34;sizeof c: %lu\n&#34;, sizeof(c));
+    printf(&#34;len of c: %lu\n&#34;, sizeof(c)/sizeof(*c));
+
+    c[1] = &#34;iis&#34;;
+    printf(&#34;a[1]:   %p\n&#34;, a[1]);
+    printf(&#34;c[1]:   %p\n&#34;, c[1]);
+
+    free(b);
+
+    return 0;
+}</pre></div>
+<p>输出：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">a:     0x7fff827965b0
+*a:    0x400a51
+a[0]:  0x400a51
+a[1]:  0x400a56
+a[2]:  0x400a59
+a[3]:  0x400a5b
+a[4]:  0x400a64
+
+addr of pointers in a:
+&amp;a[0]:  0x7fff827965b0
+&amp;a[1]:  0x7fff827965b8
+&amp;a[2]:  0x7fff827965c0
+&amp;a[3]:  0x7fff827965c8
+&amp;a[4]:  0x7fff827965d0
+sizeof a: 40
+len a:  : 5
+b[0]:   0x400a51
+b[1]:   0x400a56
+b[2]:   0x400b3d
+printing the first elem: This
+printing the first elem: This
+printing the first elem: This
+sizeof a: 40
+len of a: 5
+sizeof b: 8
+len of b: 1
+sizeof c: 8
+len of c: 1
+a[1]:   0x400b3d
+c[1]:   0x400b3d</pre></div>
+<ul>
+<li>a 是一个 <code>char*</code> 的数组，内容是五个字符串的首地址，五个字符串都保存在 .rodata 段</li>
+<li>a 自身在栈上，占用 <code>8 × 5 = 40</code> 个字节</li>
+<li>b 是一个指针，大小是 8 个字节，malloc 分配了 4 个 <code>char*</code> 大小的空间给 b，b 可以安全使用其 32 个字节</li>
+<li>c 是一个指针，大小是 8 个字节，值是 a 的首地址，可以安全使用 a 的 40 个字节</li>
+<li>a、b、c 的内容都可以重新赋值，使用起来应该没有什么区别</li>
+<li><code>char**</code> 和 <code>char* a[]</code> 都可以作为 <code>char**</code> 和 <code>char* a[]</code> 的参数使用</li>
+</ul>
+
+<p>总的来说，没看到 <code>char**</code> 和 <code>char* a[]</code> 在使用上有太大区别，都是一段内存的首地址，这块内存中保存的是 <code>char*</code> 指针。使用的时候注意这块内存大小是多少，不要越界访问即可。</p>
+
+<h3 id="柔性数组-flexible-array-用法">柔性数组 (Flexible Array) 用法</h3>
+
+<p>最近看 Python 3 整数实现的时候看到柔性数组的用法，跟这一块联系比较密切，这里顺带介绍一下。</p>
+
+<p>下面的代码在 cpython 的 Include/longintrepr.h：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">struct _longobject {
+    PyObject_VAR_HEAD
+    digit ob_digit[1];
+};</pre></div>
+<p>整数对象的末尾处有一个表示位数的数组，数组长度是 1，这个数组就是柔性数组。柔性数组有的时候也会写成长度为 0 的数组。使用的时候会根据具体需要为数组动态分配空间：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* cpython/Objects/longobject.c */
+PyLongObject *
+_PyLong_New(Py_ssize_t size)
+{
+    PyLongObject *result;
+    /* Number of bytes needed is: offsetof(PyLongObject, ob_digit) +
+       sizeof(digit)*size.  Previous incarnations of this code used
+       sizeof(PyVarObject) instead of the offsetof, but this risks being
+       incorrect in the presence of padding between the PyVarObject header
+       and the digits. */
+    if (size &gt; (Py_ssize_t)MAX_LONG_DIGITS) {
+        PyErr_SetString(PyExc_OverflowError,
+                        &#34;too many digits in integer&#34;);
+        return NULL;
+    }
+    result = PyObject_MALLOC(offsetof(PyLongObject, ob_digit) +
+                             size*sizeof(digit));
+    if (!result) {
+        PyErr_NoMemory();
+        return NULL;
+    }
+    return (PyLongObject*)PyObject_INIT_VAR(result, &amp;PyLong_Type, size);
+}</pre></div>
+<p>其中对 PyObject_MALLOC 的调用就是典型的柔性数组用法，为整数对象分配空间时，除了头部固定大小的空间，还会根据实际需要的 digit 长度动态分配空间。使用的时候，通过 ob_digit 数组名访问动态分配的这块内存即可。</p>
+
+<h2 id="例4-const-与指针">例4：const 与指针</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 4.const_with_pointer.c */
+#include &lt;stdio.h&gt;
+
+int main()
+{
+    const int ci = 4;
+    int i = 5;
+
+    const int* pci = &amp;ci;
+    const int* pi = &amp;i;
+
+    // error: cannot use pci or pi to modify the number it points to
+    // *pci += 1;
+    // *pi += 1;
+
+    int* const cpi = &amp;i;
+    *cpi += 1;
+
+    // ok, but using cpci, valueof ci can be modified
+    int* const cpci = &amp;ci;
+
+    *cpci += 1;
+
+    printf(&#34;ci: %d\n&#34;, ci);
+
+    return 0;
+}</pre></div>
+<ul>
+<li><code>const int*</code> 和 <code>int const*</code> 是等同的，是常量指针，表示指针指向的是 const int，无法通过常量指针修改指向的变量的值。Google 编程风格比较推荐 <code>const int*</code> 的写法，这样写也确实更自然</li>
+<li><code>int* const cpi</code> 表示指针常量，指向的是一个整数。指针本身是常量，只能在声明的时候赋值，后续无法再修改。无论用于初始化的是常量的地址还是非常量的地址，都可以通过这个指针修改其值</li>
+<li><code>const int* const</code> 就表示指向常量的指针常量，指针本身不能重新赋值，也不能通过这个指针为指向的变量赋值</li>
+<li>const 修饰一个变量，是说不能通过这个变量名修改对应的内存块的内容，如果又定义一个非常量指针指向这块内存，还是可以通过这个指针修改这块内存的内容。也就是 const 限制的是其修饰的变量/指针，限定的是你能不能通过这个变量名、指针去修改对应的内存块的内容</li>
+</ul>
+
+<h2 id="结语">结语</h2>
+
+<p>下次再看一下函数指针，这样指针这一块的东西就都很清楚了。</p>
+
+		</div></div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+<script>feather.replace()</script>
+</body>
+</html>

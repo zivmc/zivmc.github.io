@@ -4,12 +4,32 @@
   
   <url>
     <loc>https://zivmc.github.io/tags/c/</loc>
-    <lastmod>2019-11-13T17:11:31+08:00</lastmod>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zivmc.github.io/categories/</loc>
-    <lastmod>2019-11-13T17:11:31+08:00</lastmod>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/</loc>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/tags/</loc>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/categories/tech/</loc>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zivmc.github.io/posts/pointer-array-and-const/</loc>
+    <lastmod>2019-11-15T14:43:39+08:00</lastmod>
   </url>
   
   <url>
@@ -19,21 +39,6 @@
   
   <url>
     <loc>https://zivmc.github.io/posts/check-pointers-with-gdb/</loc>
-    <lastmod>2019-11-13T17:11:31+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zivmc.github.io/posts/</loc>
-    <lastmod>2019-11-13T17:11:31+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zivmc.github.io/tags/</loc>
-    <lastmod>2019-11-13T17:11:31+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zivmc.github.io/categories/tech/</loc>
     <lastmod>2019-11-13T17:11:31+08:00</lastmod>
   </url>
   

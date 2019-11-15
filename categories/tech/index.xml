@@ -6,10 +6,20 @@
     <description>Recent content in tech on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Nov 2019 17:11:31 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 15 Nov 2019 14:43:39 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>指针、数组和 const</title>
+      <link>https://zivmc.github.io/posts/pointer-array-and-const/</link>
+      <pubDate>Fri, 15 Nov 2019 14:43:39 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/pointer-array-and-const/</guid>
+      <description>上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
+例1：指针与数字相加 /* 1.array.c */ #include &amp;lt;stdio.h&amp;gt; int main() { int a[5] = {0, 1, 2, 3, 4}; int *pi = a; long addr = (long)a; printf(&amp;#34;sizeof a: %lu\n&amp;#34;, sizeof(a)); printf(&amp;#34;count a: %lu\n&amp;#34;, sizeof(a)/sizeof(*a)); printf(&amp;#34;a: %p\n&amp;#34;, a); printf(&amp;#34;a + 1: %p\n&amp;#34;, a + 1); printf(&amp;#34;a + 4: %p\n&amp;#34;, a + 4); printf(&amp;#34;*(a + 1): %d\n&amp;#34;, *(a + 1)); printf(&amp;#34;*(a + 4): %d\n&amp;#34;, *(a + 4)); printf(&amp;#34;&amp;amp;a[0]: %p\n&amp;#34;, &amp;amp;a[0]); printf(&amp;#34;&amp;amp;a[1]: %p\n&amp;#34;, &amp;amp;a[1]); printf(&amp;#34;&amp;amp;a[4]: %p\n&amp;#34;, &amp;amp;a[4]); printf(&amp;#34;pi: %p\n&amp;#34;, pi); printf(&amp;#34;pi + 1: %p\n&amp;#34;, (pi + 1)); printf(&amp;#34;addr: 0x%lx\n&amp;#34;, addr); printf(&amp;#34;addr + 1: 0x%lx\n&amp;#34;, addr + 1); printf(&amp;#34;\nchar array:\n&amp;#34;); char c[5] = {&amp;#39;h&amp;#39;, &amp;#39;e&amp;#39;, &amp;#39;l&amp;#39;, &amp;#39;l&amp;#39;, &amp;#39;o&amp;#39;}; printf(&amp;#34;sizeof c: %lu\n&amp;#34;, sizeof(c)); printf(&amp;#34;count c: %lu\n&amp;#34;, sizeof(c)/sizeof(*c)); printf(&amp;#34;c: %p\n&amp;#34;, c); printf(&amp;#34;c + 1: %p\n&amp;#34;, c + 1); printf(&amp;#34;*c: %c\n&amp;#34;, *c); printf(&amp;#34;*(c + 1): %c\n&amp;#34;, *(c + 1)); printf(&amp;#34;*c: %u\n&amp;#34;, *c); return 0; }  sizeof(数组名) 返回整个数组占用的字节数 sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8 指针和数组名加 1，得到的都是下一个元素的地址 指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义  例2：指针与字符串 /* 2.</description>
+    </item>
     
     <item>
       <title>gdb 查看 C 中未初始化的指针</title>
