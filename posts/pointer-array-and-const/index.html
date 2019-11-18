@@ -334,6 +334,40 @@ int main()
 
 <p>下次再看一下函数指针，这样指针这一块的东西就都很清楚了。</p>
 
+<h2 id="更新-函数指针">更新：函数指针</h2>
+
+<p>看了一下，函数指针这块除了复杂的嵌套之外，好像没有太多进阶用法了，这里简单记一下。</p>
+
+<p>对于复杂的嵌套，一般用的不会太多，看代码遇到的话，按符号优先级从里向外展开基本也都能看懂。</p>
+
+<p>例子：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">#include &lt;stdio.h&gt;
+
+int max(int x, int y) {
+    return x &gt; y ? x : y;
+}
+
+int main()
+{
+    int (*fp)(int, int) = max;
+
+    printf(&#34;%d\n&#34;, fp(3, 4));
+
+    return 0;
+}</pre></div>
+<h3 id="写法">写法</h3>
+
+<p><code>= max</code> 或者 <code>= &amp;max</code> 都可以，<code>fp(3, 4)</code> 或者 <code>(*fp)(3, 4)</code> 都可以。</p>
+
+<h3 id="使用举例">使用举例</h3>
+
+<ul>
+<li>函数指针作为 struct 的成员变量，实现类似于类中成员函数的效果</li>
+<li>函数指针指向不同类型数据的处理函数，实现类似于 C++ 模板的效果</li>
+<li>不同的处理函数放在函数指针数组中，简化 switch 语句</li>
+<li>函数指针作为参数传入，实现类似于回调的效果</li>
+</ul>
+
 		</div></div>
 	<div class="footer wrapper">
 	<nav class="nav">
