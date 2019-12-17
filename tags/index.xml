@@ -6,10 +6,19 @@
     <description>Recent content in Tags on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 15 Nov 2019 14:43:39 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2019 16:03:01 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Android</title>
+      <link>https://zivmc.github.io/tags/android/</link>
+      <pubDate>Thu, 12 Dec 2019 16:03:01 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/tags/android/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>C</title>
@@ -26,15 +35,6 @@
       <pubDate>Wed, 13 Nov 2019 17:11:31 +0800</pubDate>
       
       <guid>https://zivmc.github.io/tags/gdb/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Android</title>
-      <link>https://zivmc.github.io/tags/android/</link>
-      <pubDate>Tue, 12 Nov 2019 19:29:38 +0800</pubDate>
-      
-      <guid>https://zivmc.github.io/tags/android/</guid>
       <description></description>
     </item>
     

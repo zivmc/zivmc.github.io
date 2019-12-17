@@ -122,145 +122,145 @@ openssl dgst -sha256 -verify public."/>
 <h2 id="c-程序使用-openssl-签名和验签">C 程序使用 openssl 签名和验签</h2>
 
 <p>签名：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* sign.c */
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;openssl/pem.h&gt;
-#include &lt;openssl/rsa.h&gt;
-#include &lt;openssl/sha.h&gt;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* sign.c */</span>
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdlib.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/pem.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/rsa.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/sha.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#008000">// Buffer for file read operations. The buffer must be able to accomodate
+</span><span style="color:#008000">// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
+</span><span style="color:#008000"></span><span style="color:#00f">#define BUFFER_SIZE 512
+</span><span style="color:#00f"></span><span style="color:#00f">static</span> <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">char</span> buffer[BUFFER_SIZE];
 
-// Buffer for file read operations. The buffer must be able to accomodate
-// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
-#define BUFFER_SIZE 512
-static unsigned char buffer[BUFFER_SIZE];
-
-int main(int argc, char *argv[])
+<span style="color:#2b91af">int</span> main(<span style="color:#2b91af">int</span> argc, <span style="color:#2b91af">char</span> *argv[])
 {
-    if(argc != 3) {
-        fprintf(stderr, &#34;Usage: %s datafile private_key\n&#34;, argv[0]);
-        return -1;
+    <span style="color:#00f">if</span>(argc != 3) {
+        fprintf(stderr, <span style="color:#a31515">&#34;Usage: %s datafile private_key</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, argv[0]);
+        <span style="color:#00f">return</span> -1;
     }
-    const char* filename = argv[1];
-    const char* private_key_file = argv[2];
+    <span style="color:#00f">const</span> <span style="color:#2b91af">char</span>* filename = argv[1];
+    <span style="color:#00f">const</span> <span style="color:#2b91af">char</span>* private_key_file = argv[2];
 
-    unsigned char* sig = NULL;
-    unsigned int sig_len = 0;
+    <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">char</span>* sig = NULL;
+    <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">int</span> sig_len = 0;
 
-    unsigned bytes = 0;
+    <span style="color:#2b91af">unsigned</span> bytes = 0;
 
-    // Calculate SHA256 digest for datafile
-    FILE* datafile = fopen(filename , &#34;rb&#34;);
+    <span style="color:#008000">// Calculate SHA256 digest for datafile
+</span><span style="color:#008000"></span>    FILE* datafile = fopen(filename , <span style="color:#a31515">&#34;rb&#34;</span>);
 
-    // Buffer to hold the calculated digest
-    unsigned char digest[SHA256_DIGEST_LENGTH];
+    <span style="color:#008000">// Buffer to hold the calculated digest
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">char</span> digest[SHA256_DIGEST_LENGTH];
     SHA256_CTX ctx;
     SHA256_Init(&amp;ctx);
 
-    // Read data in chunks and feed it to OpenSSL SHA256
-    while((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
+    <span style="color:#008000">// Read data in chunks and feed it to OpenSSL SHA256
+</span><span style="color:#008000"></span>    <span style="color:#00f">while</span>((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
         SHA256_Update(&amp;ctx, buffer, bytes);
     }
 
-    // get datafile digest
-    SHA256_Final(digest, &amp;ctx);
+    <span style="color:#008000">// get datafile digest
+</span><span style="color:#008000"></span>    SHA256_Final(digest, &amp;ctx);
     fclose(datafile);
 
-    // read private_key and save it to RSA structure
-    FILE* prikey = fopen(private_key_file, &#34;r&#34;);
+    <span style="color:#008000">// read private_key and save it to RSA structure
+</span><span style="color:#008000"></span>    FILE* prikey = fopen(private_key_file, <span style="color:#a31515">&#34;r&#34;</span>);
     RSA* rsa_prikey = PEM_read_RSAPrivateKey(prikey, NULL, NULL, NULL);
 
-    // allocate space for signature, signature size should match rsa_prikey type
-    sig = malloc(RSA_size(rsa_prikey));
+    <span style="color:#008000">// allocate space for signature, signature size should match rsa_prikey type
+</span><span style="color:#008000"></span>    sig = malloc(RSA_size(rsa_prikey));
 
-    // sign digest, writing signature and length of signature to sig and sig_len
-    int result = RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH,
+    <span style="color:#008000">// sign digest, writing signature and length of signature to sig and sig_len
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">int</span> result = RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH,
                             sig, &amp;sig_len, rsa_prikey);
     RSA_free(rsa_prikey);
     fclose(prikey);
 
-    if(result == 1)
+    <span style="color:#00f">if</span>(result == 1)
     {
-        printf(&#34;Signing succeed\n&#34;);
-        FILE* sig_file = fopen(&#34;./sig_output.sig&#34;, &#34;w&#34;);
-        fprintf(sig_file, &#34;%s&#34;, sig);
+        printf(<span style="color:#a31515">&#34;Signing succeed</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+        FILE* sig_file = fopen(<span style="color:#a31515">&#34;./sig_output.sig&#34;</span>, <span style="color:#a31515">&#34;w&#34;</span>);
+        fprintf(sig_file, <span style="color:#a31515">&#34;%s&#34;</span>, sig);
         fclose(sig_file);
-        return 0;
-    } else {
-        printf(&#34;Signing failed\n&#34;);
-        return -1;
+        <span style="color:#00f">return</span> 0;
+    } <span style="color:#00f">else</span> {
+        printf(<span style="color:#a31515">&#34;Signing failed</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+        <span style="color:#00f">return</span> -1;
     }
-}</pre></div>
+}</code></pre></div>
 <p>以下验签的代码来自 <a href="https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/">PAGE FAULT BLOG</a>：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* verify.c
- * https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/
- */
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* verify.c
+</span><span style="color:#008000"> * https://pagefault.blog/2019/04/22/how-to-sign-and-verify-using-openssl/
+</span><span style="color:#008000"> */</span>
 
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;openssl/pem.h&gt;
-#include &lt;openssl/rsa.h&gt;
-#include &lt;openssl/sha.h&gt;
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdlib.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/pem.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/rsa.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;openssl/sha.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#008000">// Buffer for file read operations. The buffer must be able to accomodate
+</span><span style="color:#008000">// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
+</span><span style="color:#008000"></span><span style="color:#00f">#define BUFFER_SIZE 512
+</span><span style="color:#00f"></span><span style="color:#00f">static</span> <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">char</span> buffer[BUFFER_SIZE];
 
-// Buffer for file read operations. The buffer must be able to accomodate
-// the RSA signature in whole (e.g. 4096-bit RSA key produces 512 byte signature)
-#define BUFFER_SIZE 512
-static unsigned char buffer[BUFFER_SIZE];
-
-int main(int argc, char *argv[])
+<span style="color:#2b91af">int</span> main(<span style="color:#2b91af">int</span> argc, <span style="color:#2b91af">char</span> *argv[])
 {
-    if(argc != 4) {
-        fprintf(stderr, &#34;Usage: %s datafile signature_file public_key\n&#34;, argv[0]);
-        return -1;
+    <span style="color:#00f">if</span>(argc != 4) {
+        fprintf(stderr, <span style="color:#a31515">&#34;Usage: %s datafile signature_file public_key</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, argv[0]);
+        <span style="color:#00f">return</span> -1;
     }
-    const char* filename = argv[1];
-    const char* sigfile = argv[2];
-    const char* pubkeyfile = argv[3];
+    <span style="color:#00f">const</span> <span style="color:#2b91af">char</span>* filename = argv[1];
+    <span style="color:#00f">const</span> <span style="color:#2b91af">char</span>* sigfile = argv[2];
+    <span style="color:#00f">const</span> <span style="color:#2b91af">char</span>* pubkeyfile = argv[3];
 
-    unsigned bytes = 0;
+    <span style="color:#2b91af">unsigned</span> bytes = 0;
 
-    // Calculate SHA256 digest for datafile
-    FILE* datafile = fopen(filename , &#34;rb&#34;);
+    <span style="color:#008000">// Calculate SHA256 digest for datafile
+</span><span style="color:#008000"></span>    FILE* datafile = fopen(filename , <span style="color:#a31515">&#34;rb&#34;</span>);
 
-    // Buffer to hold the calculated digest
-    unsigned char digest[SHA256_DIGEST_LENGTH];
+    <span style="color:#008000">// Buffer to hold the calculated digest
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">unsigned</span> <span style="color:#2b91af">char</span> digest[SHA256_DIGEST_LENGTH];
     SHA256_CTX ctx;
     SHA256_Init(&amp;ctx);
 
-    // Read data in chunks and feed it to OpenSSL SHA256
-    while((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
+    <span style="color:#008000">// Read data in chunks and feed it to OpenSSL SHA256
+</span><span style="color:#008000"></span>    <span style="color:#00f">while</span>((bytes = fread(buffer, 1, BUFFER_SIZE, datafile))) {
         SHA256_Update(&amp;ctx, buffer, bytes);
     }
 
     SHA256_Final(digest, &amp;ctx);
     fclose(datafile);
 
-    // Read signature from file
-    FILE* sign = fopen (sigfile , &#34;r&#34;);
+    <span style="color:#008000">// Read signature from file
+</span><span style="color:#008000"></span>    FILE* sign = fopen (sigfile , <span style="color:#a31515">&#34;r&#34;</span>);
 
     bytes = fread(buffer, 1, BUFFER_SIZE, sign);
     fclose(sign);
 
-    // Verify that calculated digest and signature match
-    FILE* pubkey = fopen(pubkeyfile, &#34;r&#34;);
+    <span style="color:#008000">// Verify that calculated digest and signature match
+</span><span style="color:#008000"></span>    FILE* pubkey = fopen(pubkeyfile, <span style="color:#a31515">&#34;r&#34;</span>);
 
-    // Read public key from file
-    RSA* rsa_pubkey = PEM_read_RSA_PUBKEY(pubkey, NULL, NULL, NULL);
+    <span style="color:#008000">// Read public key from file
+</span><span style="color:#008000"></span>    RSA* rsa_pubkey = PEM_read_RSA_PUBKEY(pubkey, NULL, NULL, NULL);
 
-    // Decrypt signature (in buffer) and verify it matches
-    // with the digest calculated from data file.
-    int result = RSA_verify(NID_sha256, digest, SHA256_DIGEST_LENGTH,
+    <span style="color:#008000">// Decrypt signature (in buffer) and verify it matches
+</span><span style="color:#008000"></span>    <span style="color:#008000">// with the digest calculated from data file.
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">int</span> result = RSA_verify(NID_sha256, digest, SHA256_DIGEST_LENGTH,
                             buffer, bytes, rsa_pubkey);
     RSA_free(rsa_pubkey);
     fclose(pubkey);
 
-    if(result == 1) {
-        printf(&#34;Signature is valid\n&#34;);
-        return 0;
-    } else {
-        printf(&#34;Signature is invalid\n&#34;);
-        return 1;
+    <span style="color:#00f">if</span>(result == 1) {
+        printf(<span style="color:#a31515">&#34;Signature is valid</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+        <span style="color:#00f">return</span> 0;
+    } <span style="color:#00f">else</span> {
+        printf(<span style="color:#a31515">&#34;Signature is invalid</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+        <span style="color:#00f">return</span> 1;
     }
-}</pre></div>
+}</code></pre></div>
 <p>编译：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">gcc verify.c -lcrypto -o verify
 gcc sign.c -lcrypto -o sign</pre></div>

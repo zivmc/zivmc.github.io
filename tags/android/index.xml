@@ -6,10 +6,24 @@
     <description>Recent content in Android on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Nov 2019 19:29:38 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2019 16:03:01 +0800</lastBuildDate>
     
 	<atom:link href="https://zivmc.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Android 智能指针</title>
+      <link>https://zivmc.github.io/posts/android-smart-pointer/</link>
+      <pubDate>Thu, 12 Dec 2019 16:03:01 +0800</pubDate>
+      
+      <guid>https://zivmc.github.io/posts/android-smart-pointer/</guid>
+      <description>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.1.0_r1，不同版本 Android 在这一块的实现差异还是比较小的。
+智能指针简介 以 C++ 标准库的 shared_ptr 为例，每次有新的 shared_ptr 指向同一个对象，这个对象的引用计数就会加 1；当一个 shared_ptr 不再指向这个对象时，这个对象的引用计数就会减 1；当引用计数减为 0 时，就将这个对象释放掉。实现的大致思路就是在智能指针的构造函数中引用计数加 1，在析构函数中引用计数减 1。
+当对象 A 有对象 B 的智能指针作为成员变量，对象 B 也有对象 A 的智能指针作为成员变量时，由于同时只能释放一个对象，尝试释放 A 时，发现 A 还被 B 引用，A 就不会被释放，尝试释放 B 时也是类似的。这样 A 和 B 在程序退出之前就不会被释放掉，实际上造成了内存泄露。
+为了解决上面的相互引用问题，又有了 weak_ptr 的概念，weak_ptr 指向一个对象时，不会增加这个对象的（强）引用计数。如果把上面 A 和 B 中的智能指针替换为 weak_ptr，那么相互引用就不会影响对象的释放了。
+Android 中的智能指针在行为上跟上面的介绍基本是一致的，有强指针类型 sp 和弱指针类型 wp，对应分别有强引用计数和弱引用计数。智能指针的源码就是下面这三个文件：
+system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/utils/RefBase.h system/core/libutils/RefBase.cpp 其中 StrongPointer.h 中是强指针 sp 这个模板类的定义和实现；RefBase.h 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；RefBase.</description>
+    </item>
     
     <item>
       <title>Android 硬件抽象层相关的一组例子</title>

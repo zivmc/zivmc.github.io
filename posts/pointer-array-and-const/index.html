@@ -78,43 +78,43 @@
 <p>上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。</p>
 
 <h2 id="例1-指针与数字相加">例1：指针与数字相加</h2>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 1.array.c */
-#include &lt;stdio.h&gt;
-
-int main()
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 1.array.c */</span>
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#2b91af">int</span> main()
 {
-    int a[5] = {0, 1, 2, 3, 4};
-    int *pi = a;
-    long addr = (long)a;
+    <span style="color:#2b91af">int</span> a[5] = {0, 1, 2, 3, 4};
+    <span style="color:#2b91af">int</span> *pi = a;
+    <span style="color:#2b91af">long</span> addr = (<span style="color:#2b91af">long</span>)a;
 
-    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
-    printf(&#34;count a:  %lu\n&#34;, sizeof(a)/sizeof(*a));
-    printf(&#34;a:        %p\n&#34;, a);
-    printf(&#34;a + 1:    %p\n&#34;, a + 1);
-    printf(&#34;a + 4:    %p\n&#34;, a + 4);
-    printf(&#34;*(a + 1): %d\n&#34;, *(a + 1));
-    printf(&#34;*(a + 4): %d\n&#34;, *(a + 4));
-    printf(&#34;&amp;a[0]:    %p\n&#34;, &amp;a[0]);
-    printf(&#34;&amp;a[1]:    %p\n&#34;, &amp;a[1]);
-    printf(&#34;&amp;a[4]:    %p\n&#34;, &amp;a[4]);
-    printf(&#34;pi:       %p\n&#34;, pi);
-    printf(&#34;pi + 1:   %p\n&#34;, (pi + 1));
+    printf(<span style="color:#a31515">&#34;sizeof a: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a));
+    printf(<span style="color:#a31515">&#34;count a:  %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a)/<span style="color:#00f">sizeof</span>(*a));
+    printf(<span style="color:#a31515">&#34;a:        %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a);
+    printf(<span style="color:#a31515">&#34;a + 1:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a + 1);
+    printf(<span style="color:#a31515">&#34;a + 4:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a + 4);
+    printf(<span style="color:#a31515">&#34;*(a + 1): %d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *(a + 1));
+    printf(<span style="color:#a31515">&#34;*(a + 4): %d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *(a + 4));
+    printf(<span style="color:#a31515">&#34;&amp;a[0]:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[0]);
+    printf(<span style="color:#a31515">&#34;&amp;a[1]:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[1]);
+    printf(<span style="color:#a31515">&#34;&amp;a[4]:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[4]);
+    printf(<span style="color:#a31515">&#34;pi:       %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, pi);
+    printf(<span style="color:#a31515">&#34;pi + 1:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, (pi + 1));
 
-    printf(&#34;addr:     0x%lx\n&#34;, addr);
-    printf(&#34;addr + 1: 0x%lx\n&#34;, addr + 1);
+    printf(<span style="color:#a31515">&#34;addr:     0x%lx</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, addr);
+    printf(<span style="color:#a31515">&#34;addr + 1: 0x%lx</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, addr + 1);
 
-    printf(&#34;\nchar array:\n&#34;);
-    char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;};
-    printf(&#34;sizeof c: %lu\n&#34;, sizeof(c));
-    printf(&#34;count c:  %lu\n&#34;, sizeof(c)/sizeof(*c));
-    printf(&#34;c:        %p\n&#34;, c);
-    printf(&#34;c + 1:    %p\n&#34;, c + 1);
-    printf(&#34;*c:       %c\n&#34;, *c);
-    printf(&#34;*(c + 1): %c\n&#34;, *(c + 1));
-    printf(&#34;*c:       %u\n&#34;, *c);
+    printf(<span style="color:#a31515">&#34;</span><span style="color:#a31515">\n</span><span style="color:#a31515">char array:</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+    <span style="color:#2b91af">char</span> c[5] = {<span style="color:#a31515">&#39;h&#39;</span>, <span style="color:#a31515">&#39;e&#39;</span>, <span style="color:#a31515">&#39;l&#39;</span>, <span style="color:#a31515">&#39;l&#39;</span>, <span style="color:#a31515">&#39;o&#39;</span>};
+    printf(<span style="color:#a31515">&#34;sizeof c: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(c));
+    printf(<span style="color:#a31515">&#34;count c:  %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(c)/<span style="color:#00f">sizeof</span>(*c));
+    printf(<span style="color:#a31515">&#34;c:        %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, c);
+    printf(<span style="color:#a31515">&#34;c + 1:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, c + 1);
+    printf(<span style="color:#a31515">&#34;*c:       %c</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *c);
+    printf(<span style="color:#a31515">&#34;*(c + 1): %c</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *(c + 1));
+    printf(<span style="color:#a31515">&#34;*c:       %u</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *c);
 
-    return 0;
-}</pre></div>
+    <span style="color:#00f">return</span> 0;
+}</code></pre></div>
 <ul>
 <li>sizeof(数组名) 返回整个数组占用的字节数</li>
 <li>sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8</li>
@@ -123,27 +123,27 @@ int main()
 </ul>
 
 <h2 id="例2-指针与字符串">例2：指针与字符串</h2>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 2.char_pointer.c */
-#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-int main()
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 2.char_pointer.c */</span>
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;string.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#2b91af">int</span> main()
 {
-    // &#34;hello&#34; in .rodata
-    char* a = &#34;hello&#34;;
-    printf(&#34;sizeof a:    %lu\n&#34;, sizeof(a));
-    printf(&#34;strlen of a: %lu\n&#34;, strlen(a));
-    printf(&#34;a[0]:        %c\n&#34;, a[0]);
-    printf(&#34;a[5]:        %u\n&#34;, a[5]);
-    printf(&#34;a[6]:        %u\n&#34;, a[6]);
+    <span style="color:#008000">// &#34;hello&#34; in .rodata
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">char</span>* a = <span style="color:#a31515">&#34;hello&#34;</span>;
+    printf(<span style="color:#a31515">&#34;sizeof a:    %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a));
+    printf(<span style="color:#a31515">&#34;strlen of a: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, strlen(a));
+    printf(<span style="color:#a31515">&#34;a[0]:        %c</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[0]);
+    printf(<span style="color:#a31515">&#34;a[5]:        %u</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[5]);
+    printf(<span style="color:#a31515">&#34;a[6]:        %u</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[6]);
 
-    // &#34;world&#34; in stack
-    char b[] = &#34;world&#34;;
-    printf(&#34;sizeof b:    %lu\n&#34;, sizeof(b));
-    printf(&#34;strlen of b: %lu\n&#34;, strlen(b));
+    <span style="color:#008000">// &#34;world&#34; in stack
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">char</span> b[] = <span style="color:#a31515">&#34;world&#34;</span>;
+    printf(<span style="color:#a31515">&#34;sizeof b:    %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(b));
+    printf(<span style="color:#a31515">&#34;strlen of b: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, strlen(b));
 
-    return 0;
-}</pre></div>
+    <span style="color:#00f">return</span> 0;
+}</code></pre></div>
 <p>输出：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sizeof a:    8
 strlen of a: 5
@@ -160,64 +160,64 @@ strlen of b: 5</pre></div>
 </ul>
 
 <h2 id="例3-char-和-char-a">例3：<code>char**</code> 和 <code>char* a[]</code></h2>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 3.char_pointer_array.c */
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-
-void fun(char** a) {
-    printf(&#34;printing the first elem: %s\n&#34;, *a);
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 3.char_pointer_array.c */</span>
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdlib.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#2b91af">void</span> fun(<span style="color:#2b91af">char</span>** a) {
+    printf(<span style="color:#a31515">&#34;printing the first elem: %s</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *a);
 }
 
-int main()
+<span style="color:#2b91af">int</span> main()
 {
-    char* a[] = {&#34;This&#34;, &#34;is&#34;, &#34;a&#34;, &#34;sentence&#34;, &#34;.&#34;};
+    <span style="color:#2b91af">char</span>* a[] = {<span style="color:#a31515">&#34;This&#34;</span>, <span style="color:#a31515">&#34;is&#34;</span>, <span style="color:#a31515">&#34;a&#34;</span>, <span style="color:#a31515">&#34;sentence&#34;</span>, <span style="color:#a31515">&#34;.&#34;</span>};
 
-    printf(&#34;a:     %p\n&#34;, a);
-    printf(&#34;*a:    %p\n&#34;, *a);
-    printf(&#34;a[0]:  %p\n&#34;, a[0]);
-    printf(&#34;a[1]:  %p\n&#34;, a[1]);
-    printf(&#34;a[2]:  %p\n&#34;, a[2]);
-    printf(&#34;a[3]:  %p\n&#34;, a[3]);
-    printf(&#34;a[4]:  %p\n&#34;, a[4]);
-    printf(&#34;\naddr of pointers in a:\n&#34;);
-    printf(&#34;&amp;a[0]:  %p\n&#34;, &amp;a[0]);
-    printf(&#34;&amp;a[1]:  %p\n&#34;, &amp;a[1]);
-    printf(&#34;&amp;a[2]:  %p\n&#34;, &amp;a[2]);
-    printf(&#34;&amp;a[3]:  %p\n&#34;, &amp;a[3]);
-    printf(&#34;&amp;a[4]:  %p\n&#34;, &amp;a[4]);
+    printf(<span style="color:#a31515">&#34;a:     %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a);
+    printf(<span style="color:#a31515">&#34;*a:    %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *a);
+    printf(<span style="color:#a31515">&#34;a[0]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[0]);
+    printf(<span style="color:#a31515">&#34;a[1]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[1]);
+    printf(<span style="color:#a31515">&#34;a[2]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[2]);
+    printf(<span style="color:#a31515">&#34;a[3]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[3]);
+    printf(<span style="color:#a31515">&#34;a[4]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[4]);
+    printf(<span style="color:#a31515">&#34;</span><span style="color:#a31515">\n</span><span style="color:#a31515">addr of pointers in a:</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>);
+    printf(<span style="color:#a31515">&#34;&amp;a[0]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[0]);
+    printf(<span style="color:#a31515">&#34;&amp;a[1]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[1]);
+    printf(<span style="color:#a31515">&#34;&amp;a[2]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[2]);
+    printf(<span style="color:#a31515">&#34;&amp;a[3]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[3]);
+    printf(<span style="color:#a31515">&#34;&amp;a[4]:  %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, &amp;a[4]);
 
-    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
-    printf(&#34;len a:  : %lu\n&#34;, sizeof(a)/sizeof(*a));
+    printf(<span style="color:#a31515">&#34;sizeof a: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a));
+    printf(<span style="color:#a31515">&#34;len a:  : %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a)/<span style="color:#00f">sizeof</span>(*a));
 
-    char** b = malloc(4 * sizeof(char*));
-    b[0] = &#34;This&#34;;
-    printf(&#34;b[0]:   %p\n&#34;, b[0]);
-    *(b + 1) = &#34;is&#34;;
-    printf(&#34;b[1]:   %p\n&#34;, b[1]);
-    *(b + 2) = &#34;iis&#34;;
-    printf(&#34;b[2]:   %p\n&#34;, b[2]);
+    <span style="color:#2b91af">char</span>** b = malloc(4 * <span style="color:#00f">sizeof</span>(<span style="color:#2b91af">char</span>*));
+    b[0] = <span style="color:#a31515">&#34;This&#34;</span>;
+    printf(<span style="color:#a31515">&#34;b[0]:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, b[0]);
+    *(b + 1) = <span style="color:#a31515">&#34;is&#34;</span>;
+    printf(<span style="color:#a31515">&#34;b[1]:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, b[1]);
+    *(b + 2) = <span style="color:#a31515">&#34;iis&#34;</span>;
+    printf(<span style="color:#a31515">&#34;b[2]:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, b[2]);
 
-    char** c = a;
+    <span style="color:#2b91af">char</span>** c = a;
 
     fun(a);
     fun(b);
     fun(c);
 
-    printf(&#34;sizeof a: %lu\n&#34;, sizeof(a));
-    printf(&#34;len of a: %lu\n&#34;, sizeof(a)/sizeof(*a));
-    printf(&#34;sizeof b: %lu\n&#34;, sizeof(b));
-    printf(&#34;len of b: %lu\n&#34;, sizeof(b)/sizeof(*b));
-    printf(&#34;sizeof c: %lu\n&#34;, sizeof(c));
-    printf(&#34;len of c: %lu\n&#34;, sizeof(c)/sizeof(*c));
+    printf(<span style="color:#a31515">&#34;sizeof a: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a));
+    printf(<span style="color:#a31515">&#34;len of a: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(a)/<span style="color:#00f">sizeof</span>(*a));
+    printf(<span style="color:#a31515">&#34;sizeof b: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(b));
+    printf(<span style="color:#a31515">&#34;len of b: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(b)/<span style="color:#00f">sizeof</span>(*b));
+    printf(<span style="color:#a31515">&#34;sizeof c: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(c));
+    printf(<span style="color:#a31515">&#34;len of c: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, <span style="color:#00f">sizeof</span>(c)/<span style="color:#00f">sizeof</span>(*c));
 
-    c[1] = &#34;iis&#34;;
-    printf(&#34;a[1]:   %p\n&#34;, a[1]);
-    printf(&#34;c[1]:   %p\n&#34;, c[1]);
+    c[1] = <span style="color:#a31515">&#34;iis&#34;</span>;
+    printf(<span style="color:#a31515">&#34;a[1]:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, a[1]);
+    printf(<span style="color:#a31515">&#34;c[1]:   %p</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, c[1]);
 
     free(b);
 
-    return 0;
-}</pre></div>
+    <span style="color:#00f">return</span> 0;
+}</code></pre></div>
 <p>输出：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">a:     0x7fff827965b0
 *a:    0x400a51
@@ -265,64 +265,64 @@ c[1]:   0x400b3d</pre></div>
 <p>最近看 Python 3 整数实现的时候看到柔性数组的用法，跟这一块联系比较密切，这里顺带介绍一下。</p>
 
 <p>下面的代码在 cpython 的 Include/longintrepr.h：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">struct _longobject {
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00f">struct</span> _longobject {
     PyObject_VAR_HEAD
     digit ob_digit[1];
-};</pre></div>
+};</code></pre></div>
 <p>整数对象的末尾处有一个表示位数的数组，数组长度是 1，这个数组就是柔性数组。柔性数组有的时候也会写成长度为 0 的数组。使用的时候会根据具体需要为数组动态分配空间：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* cpython/Objects/longobject.c */
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* cpython/Objects/longobject.c */</span>
 PyLongObject *
 _PyLong_New(Py_ssize_t size)
 {
     PyLongObject *result;
-    /* Number of bytes needed is: offsetof(PyLongObject, ob_digit) +
-       sizeof(digit)*size.  Previous incarnations of this code used
-       sizeof(PyVarObject) instead of the offsetof, but this risks being
-       incorrect in the presence of padding between the PyVarObject header
-       and the digits. */
-    if (size &gt; (Py_ssize_t)MAX_LONG_DIGITS) {
+    <span style="color:#008000">/* Number of bytes needed is: offsetof(PyLongObject, ob_digit) +
+</span><span style="color:#008000">       sizeof(digit)*size.  Previous incarnations of this code used
+</span><span style="color:#008000">       sizeof(PyVarObject) instead of the offsetof, but this risks being
+</span><span style="color:#008000">       incorrect in the presence of padding between the PyVarObject header
+</span><span style="color:#008000">       and the digits. */</span>
+    <span style="color:#00f">if</span> (size &gt; (Py_ssize_t)MAX_LONG_DIGITS) {
         PyErr_SetString(PyExc_OverflowError,
-                        &#34;too many digits in integer&#34;);
-        return NULL;
+                        <span style="color:#a31515">&#34;too many digits in integer&#34;</span>);
+        <span style="color:#00f">return</span> NULL;
     }
     result = PyObject_MALLOC(offsetof(PyLongObject, ob_digit) +
-                             size*sizeof(digit));
-    if (!result) {
+                             size*<span style="color:#00f">sizeof</span>(digit));
+    <span style="color:#00f">if</span> (!result) {
         PyErr_NoMemory();
-        return NULL;
+        <span style="color:#00f">return</span> NULL;
     }
-    return (PyLongObject*)PyObject_INIT_VAR(result, &amp;PyLong_Type, size);
-}</pre></div>
+    <span style="color:#00f">return</span> (PyLongObject*)PyObject_INIT_VAR(result, &amp;PyLong_Type, size);
+}</code></pre></div>
 <p>其中对 PyObject_MALLOC 的调用就是典型的柔性数组用法，为整数对象分配空间时，除了头部固定大小的空间，还会根据实际需要的 digit 长度动态分配空间。使用的时候，通过 ob_digit 数组名访问动态分配的这块内存即可。</p>
 
 <h2 id="例4-const-与指针">例4：const 与指针</h2>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/* 4.const_with_pointer.c */
-#include &lt;stdio.h&gt;
-
-int main()
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 4.const_with_pointer.c */</span>
+<span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#2b91af">int</span> main()
 {
-    const int ci = 4;
-    int i = 5;
+    <span style="color:#00f">const</span> <span style="color:#2b91af">int</span> ci = 4;
+    <span style="color:#2b91af">int</span> i = 5;
 
-    const int* pci = &amp;ci;
-    const int* pi = &amp;i;
+    <span style="color:#00f">const</span> <span style="color:#2b91af">int</span>* pci = &amp;ci;
+    <span style="color:#00f">const</span> <span style="color:#2b91af">int</span>* pi = &amp;i;
 
-    // error: cannot use pci or pi to modify the number it points to
-    // *pci += 1;
-    // *pi += 1;
-
-    int* const cpi = &amp;i;
+    <span style="color:#008000">// error: cannot use pci or pi to modify the number it points to
+</span><span style="color:#008000"></span>    <span style="color:#008000">// *pci += 1;
+</span><span style="color:#008000"></span>    <span style="color:#008000">// *pi += 1;
+</span><span style="color:#008000"></span>
+    <span style="color:#2b91af">int</span>* <span style="color:#00f">const</span> cpi = &amp;i;
     *cpi += 1;
 
-    // ok, but using cpci, valueof ci can be modified
-    int* const cpci = &amp;ci;
+    <span style="color:#008000">// ok, but using cpci, valueof ci can be modified
+</span><span style="color:#008000"></span>    <span style="color:#2b91af">int</span>* <span style="color:#00f">const</span> cpci = &amp;ci;
 
     *cpci += 1;
 
-    printf(&#34;ci: %d\n&#34;, ci);
+    printf(<span style="color:#a31515">&#34;ci: %d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, ci);
 
-    return 0;
-}</pre></div>
+    <span style="color:#00f">return</span> 0;
+}</code></pre></div>
 <ul>
 <li><code>const int*</code> 和 <code>int const*</code> 是等同的，是常量指针，表示指针指向的是 const int，无法通过常量指针修改指向的变量的值。Google 编程风格比较推荐 <code>const int*</code> 的写法，这样写也确实更自然</li>
 <li><code>int* const cpi</code> 表示指针常量，指向的是一个整数。指针本身是常量，只能在声明的时候赋值，后续无法再修改。无论用于初始化的是常量的地址还是非常量的地址，都可以通过这个指针修改其值</li>
@@ -341,20 +341,20 @@ int main()
 <p>对于复杂的嵌套，一般用的不会太多，看代码遇到的话，按符号优先级从里向外展开基本也都能看懂。</p>
 
 <p>例子：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">#include &lt;stdio.h&gt;
-
-int max(int x, int y) {
-    return x &gt; y ? x : y;
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
+</span><span style="color:#00f"></span>
+<span style="color:#2b91af">int</span> max(<span style="color:#2b91af">int</span> x, <span style="color:#2b91af">int</span> y) {
+    <span style="color:#00f">return</span> x &gt; y ? x : y;
 }
 
-int main()
+<span style="color:#2b91af">int</span> main()
 {
-    int (*fp)(int, int) = max;
+    <span style="color:#2b91af">int</span> (*fp)(<span style="color:#2b91af">int</span>, <span style="color:#2b91af">int</span>) = max;
 
-    printf(&#34;%d\n&#34;, fp(3, 4));
+    printf(<span style="color:#a31515">&#34;%d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, fp(3, 4));
 
-    return 0;
-}</pre></div>
+    <span style="color:#00f">return</span> 0;
+}</code></pre></div>
 <h3 id="写法">写法</h3>
 
 <p><code>= max</code> 或者 <code>= &amp;max</code> 都可以，<code>fp(3, 4)</code> 或者 <code>(*fp)(3, 4)</code> 都可以。</p>
