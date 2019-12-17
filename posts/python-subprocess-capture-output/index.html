@@ -72,7 +72,12 @@ function validate_current_shell() { local current_sh=&#34;$(ps -o command -p $$)
             <a href="https://zivmc.github.io/tags/python/">Python</a>
             &#x5d;
 
-		<div class="markdown">
+
+
+
+<ul class="toc-h2"><li><a href="/posts/python-subprocess-capture-output/#subprocess-%e4%bd%bf%e7%94%a8-bin-bash-%e6%89%a7%e8%a1%8c%e5%91%bd%e4%bb%a4">subprocess 使用 /bin/bash 执行命令</a></li>
+            <li><a href="/posts/python-subprocess-capture-output/#%e6%8d%95%e6%8d%89-subprocess-%e7%9a%84%e8%be%93%e5%87%ba">捕捉 subprocess 的输出</a></li>
+            <div class="markdown">
 			
 
 <p>背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：</p>

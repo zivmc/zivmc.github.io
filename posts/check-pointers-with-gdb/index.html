@@ -75,7 +75,20 @@
             <a href="https://zivmc.github.io/tags/gdb/">gdb</a>
             &#x5d;
 
-		<div class="markdown">
+
+
+
+<ul class="toc-h2"><li><a href="/posts/check-pointers-with-gdb/#%e4%bd%bf%e7%94%a8-gdb">使用 gdb</a></li>
+            <li><a href="/posts/check-pointers-with-gdb/#%e6%9c%aa%e5%88%9d%e5%a7%8b%e5%8c%96%e7%9a%84%e6%8c%87%e9%92%88">未初始化的指针</a></li>
+            
+                    <ul class="toc-h3"><li><a href="/posts/check-pointers-with-gdb/#%e8%b0%83%e8%af%95%e4%bb%a3%e7%a0%81">调试代码</a></li>
+            <li><a href="/posts/check-pointers-with-gdb/#%e7%bc%96%e8%af%91">编译</a></li>
+            <li><a href="/posts/check-pointers-with-gdb/#%e5%8f%98%e9%87%8f%e5%9c%a8%e5%8f%af%e6%89%a7%e8%a1%8c%e6%96%87%e4%bb%b6%e4%b8%ad%e7%9a%84%e4%bd%8d%e7%bd%ae">变量在可执行文件中的位置</a></li>
+            <li><a href="/posts/check-pointers-with-gdb/#%e5%8f%98%e9%87%8f%e5%9c%a8%e8%bf%90%e8%a1%8c%e6%97%b6%e8%99%9a%e6%8b%9f%e5%9c%b0%e5%9d%80%e7%a9%ba%e9%97%b4%e4%b8%ad%e7%9a%84%e4%bd%8d%e7%bd%ae">变量在运行时虚拟地址空间中的位置</a></li>
+            <li><a href="/posts/check-pointers-with-gdb/#%e6%9c%aa%e5%88%9d%e5%a7%8b%e5%8c%96%e7%9a%84%e5%b1%80%e9%83%a8%e5%8f%98%e9%87%8f-pi2">未初始化的局部变量 pi2</a></li>
+            
+                    </ul><li><a href="/posts/check-pointers-with-gdb/#%e5%b0%8f%e7%bb%93">小结</a></li>
+            <div class="markdown">
 			
 
 <p>C 的指针这一块学得不是特别好，最近准备深入看一下，这里先用看一下 C 中未初始化的指针相关的问题。</p>

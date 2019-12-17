@@ -80,7 +80,29 @@ system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/
             <a href="https://zivmc.github.io/tags/android/">Android</a>
             &#x5d;
 
-		<div class="markdown">
+
+
+
+<ul class="toc-h2"><li><a href="/posts/android-smart-pointer/#%e6%99%ba%e8%83%bd%e6%8c%87%e9%92%88%e7%ae%80%e4%bb%8b">智能指针简介</a></li>
+            <li><a href="/posts/android-smart-pointer/#%e5%bc%ba%e6%8c%87%e9%92%88%e7%b1%bb-sp">强指针类 sp</a></li>
+            
+                    <ul class="toc-h3">
+                    <ul class="toc-h4"><li><a href="/posts/android-smart-pointer/#%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0-%e9%83%a8%e5%88%86-%e5%92%8c%e6%9e%90%e6%9e%84%e5%87%bd%e6%95%b0">构造函数（部分）和析构函数</a></li>
+            <li><a href="/posts/android-smart-pointer/#%e8%b5%8b%e5%80%bc%e8%bf%90%e7%ae%97%e7%ac%a6">赋值运算符</a></li>
+            
+                    </ul>
+                    </ul><li><a href="/posts/android-smart-pointer/#%e5%bc%b1%e6%8c%87%e9%92%88%e7%b1%bb-wp">弱指针类 wp</a></li>
+            
+                    <ul class="toc-h3"><li><a href="/posts/android-smart-pointer/#%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0%e5%92%8c%e6%9e%90%e6%9e%84%e5%87%bd%e6%95%b0">构造函数和析构函数</a></li>
+            
+                    </ul><li><a href="/posts/android-smart-pointer/#refbase-%e7%b1%bb">RefBase 类</a></li>
+            <li><a href="/posts/android-smart-pointer/#%e5%bc%ba%e6%8c%87%e9%92%88%e7%9a%84%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86">强指针的工作原理</a></li>
+            
+                    <ul class="toc-h3"><li><a href="/posts/android-smart-pointer/#sp-%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0%e4%b8%ad%e5%bc%ba%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e5%8a%a0-1">sp 构造函数中强引用计数加 1</a></li>
+            <li><a href="/posts/android-smart-pointer/#sp-%e6%9e%90%e6%9e%84%e5%87%bd%e6%95%b0%e4%b8%ad%e5%bc%ba%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e5%87%8f-1">sp 析构函数中强引用计数减 1</a></li>
+            
+                    </ul><li><a href="/posts/android-smart-pointer/#%e5%bc%b1%e6%8c%87%e9%92%88%e7%9a%84%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86">弱指针的工作原理</a></li>
+            <div class="markdown">
 			
 
 <p>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 <code>Android-8.1.0_r1</code>，不同版本 Android 在这一块的实现差异还是比较小的。</p>

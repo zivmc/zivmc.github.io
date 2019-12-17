@@ -74,7 +74,18 @@ diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96
             <a href="https://zivmc.github.io/tags/android/">Android</a>
             &#x5d;
 
-		<div class="markdown">
+
+
+
+<ul class="toc-h3"><li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e5%87%86%e5%a4%87">准备</a></li>
+            
+                    <ul class="toc-h4"><li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e5%b7%a5%e5%85%b7">工具</a></li>
+            <li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e4%bf%ae%e6%94%b9-android-prepare-vendor">修改 android-prepare-vendor</a></li>
+            <li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e9%95%9c%e5%83%8f">镜像</a></li>
+            <li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e5%87%86%e5%a4%87%e8%be%93%e5%87%ba%e6%96%87%e4%bb%b6%e5%a4%b9">准备输出文件夹</a></li>
+            
+                    </ul><li><a href="/posts/android-6.0-extract-drivers-from-factory-image/#%e6%8f%90%e5%8f%96%e9%95%9c%e5%83%8f">提取镜像</a></li>
+            <div class="markdown">
 			
 
 <p>背景是 Google 的 <a href="https://developers.google.com/android/drivers">Driver Binaries</a> 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 <a href="https://github.com/anestisb/android-prepare-vendor">android-prepare-vendor</a> 工具从 factory image 中提取驱动的方法。</p>
