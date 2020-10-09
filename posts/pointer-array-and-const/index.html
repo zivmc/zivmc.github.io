@@ -4,26 +4,64 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>指针、数组和 const - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta property="og:title" content="指针、数组和 const" />
-<meta property="og:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
-例1：指针与数字相加 /* 1.array.c */ #include &lt;stdio.h&gt; int main() { int a[5] = {0, 1, 2, 3, 4}; int *pi = a; long addr = (long)a; printf(&#34;sizeof a: %lu\n&#34;, sizeof(a)); printf(&#34;count a: %lu\n&#34;, sizeof(a)/sizeof(*a)); printf(&#34;a: %p\n&#34;, a); printf(&#34;a &#43; 1: %p\n&#34;, a &#43; 1); printf(&#34;a &#43; 4: %p\n&#34;, a &#43; 4); printf(&#34;*(a &#43; 1): %d\n&#34;, *(a &#43; 1)); printf(&#34;*(a &#43; 4): %d\n&#34;, *(a &#43; 4)); printf(&#34;&amp;a[0]: %p\n&#34;, &amp;a[0]); printf(&#34;&amp;a[1]: %p\n&#34;, &amp;a[1]); printf(&#34;&amp;a[4]: %p\n&#34;, &amp;a[4]); printf(&#34;pi: %p\n&#34;, pi); printf(&#34;pi &#43; 1: %p\n&#34;, (pi &#43; 1)); printf(&#34;addr: 0x%lx\n&#34;, addr); printf(&#34;addr &#43; 1: 0x%lx\n&#34;, addr &#43; 1); printf(&#34;\nchar array:\n&#34;); char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;}; printf(&#34;sizeof c: %lu\n&#34;, sizeof(c)); printf(&#34;count c: %lu\n&#34;, sizeof(c)/sizeof(*c)); printf(&#34;c: %p\n&#34;, c); printf(&#34;c &#43; 1: %p\n&#34;, c &#43; 1); printf(&#34;*c: %c\n&#34;, *c); printf(&#34;*(c &#43; 1): %c\n&#34;, *(c &#43; 1)); printf(&#34;*c: %u\n&#34;, *c); return 0; }  sizeof(数组名) 返回整个数组占用的字节数 sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8 指针和数组名加 1，得到的都是下一个元素的地址 指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义  例2：指针与字符串 /* 2." />
+<meta property="og:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zivmc.github.io/posts/pointer-array-and-const/" />
 <meta property="article:published_time" content="2019-11-15T14:43:39+08:00" />
 <meta property="article:modified_time" content="2019-11-15T14:43:39+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="指针、数组和 const"/>
-<meta name="twitter:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
-例1：指针与数字相加 /* 1.array.c */ #include &lt;stdio.h&gt; int main() { int a[5] = {0, 1, 2, 3, 4}; int *pi = a; long addr = (long)a; printf(&#34;sizeof a: %lu\n&#34;, sizeof(a)); printf(&#34;count a: %lu\n&#34;, sizeof(a)/sizeof(*a)); printf(&#34;a: %p\n&#34;, a); printf(&#34;a &#43; 1: %p\n&#34;, a &#43; 1); printf(&#34;a &#43; 4: %p\n&#34;, a &#43; 4); printf(&#34;*(a &#43; 1): %d\n&#34;, *(a &#43; 1)); printf(&#34;*(a &#43; 4): %d\n&#34;, *(a &#43; 4)); printf(&#34;&amp;a[0]: %p\n&#34;, &amp;a[0]); printf(&#34;&amp;a[1]: %p\n&#34;, &amp;a[1]); printf(&#34;&amp;a[4]: %p\n&#34;, &amp;a[4]); printf(&#34;pi: %p\n&#34;, pi); printf(&#34;pi &#43; 1: %p\n&#34;, (pi &#43; 1)); printf(&#34;addr: 0x%lx\n&#34;, addr); printf(&#34;addr &#43; 1: 0x%lx\n&#34;, addr &#43; 1); printf(&#34;\nchar array:\n&#34;); char c[5] = {&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;}; printf(&#34;sizeof c: %lu\n&#34;, sizeof(c)); printf(&#34;count c: %lu\n&#34;, sizeof(c)/sizeof(*c)); printf(&#34;c: %p\n&#34;, c); printf(&#34;c &#43; 1: %p\n&#34;, c &#43; 1); printf(&#34;*c: %c\n&#34;, *c); printf(&#34;*(c &#43; 1): %c\n&#34;, *(c &#43; 1)); printf(&#34;*c: %u\n&#34;, *c); return 0; }  sizeof(数组名) 返回整个数组占用的字节数 sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8 指针和数组名加 1，得到的都是下一个元素的地址 指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义  例2：指针与字符串 /* 2."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<meta name="twitter:description" content="上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <body>
 	<div class="container wrapper post">
 		<div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -63,36 +101,44 @@
 
     <div class="post-header">
         <h1 class="title">指针、数组和 const</h1>
-        <div class="meta">Posted at &mdash; Nov 15, 2019</div>
+        <div class="meta">
+            Posted &mdash; Nov 15, 2019&nbsp;&nbsp;
             
-            Categories &#x5b;
-            <a href="https://zivmc.github.io/categories/tech/">tech</a>
-            &#x5d;
-            Tags &#x5b;
-            <a href="https://zivmc.github.io/tags/c/">C</a>
-            &#x5d;
+                
+                    Category &mdash;
+                        
+                        <a href="/categories/tech">tech</a>
+                        
+                
+            &nbsp;&nbsp;
+            
+                
+                    Tag &mdash;
+                        
+                        <a href="/tags/c">C</a>
+                        
+                
+            
+        </div>
 
 
 
 
-<ul class="toc-h2"><li><a href="/posts/pointer-array-and-const/#%e4%be%8b1-%e6%8c%87%e9%92%88%e4%b8%8e%e6%95%b0%e5%ad%97%e7%9b%b8%e5%8a%a0">例1：指针与数字相加</a></li>
-            <li><a href="/posts/pointer-array-and-const/#%e4%be%8b2-%e6%8c%87%e9%92%88%e4%b8%8e%e5%ad%97%e7%ac%a6%e4%b8%b2">例2：指针与字符串</a></li>
-            <li><a href="/posts/pointer-array-and-const/#%e4%be%8b3-char-%e5%92%8c-char-a">例3：char** 和 char* a[]</a></li>
+<ul class="toc-h2"><li><a href="/posts/pointer-array-and-const/#%e4%be%8b1%e6%8c%87%e9%92%88%e4%b8%8e%e6%95%b0%e5%ad%97%e7%9b%b8%e5%8a%a0">例1：指针与数字相加</a></li>
+            <li><a href="/posts/pointer-array-and-const/#%e4%be%8b2%e6%8c%87%e9%92%88%e4%b8%8e%e5%ad%97%e7%ac%a6%e4%b8%b2">例2：指针与字符串</a></li>
+            <li><a href="/posts/pointer-array-and-const/#%e4%be%8b3char-%e5%92%8c-char-a">例3：char** 和 char* a[]</a></li>
             
                     <ul class="toc-h3"><li><a href="/posts/pointer-array-and-const/#%e6%9f%94%e6%80%a7%e6%95%b0%e7%bb%84-flexible-array-%e7%94%a8%e6%b3%95">柔性数组 (Flexible Array) 用法</a></li>
             
-                    </ul><li><a href="/posts/pointer-array-and-const/#%e4%be%8b4-const-%e4%b8%8e%e6%8c%87%e9%92%88">例4：const 与指针</a></li>
+                    </ul><li><a href="/posts/pointer-array-and-const/#%e4%be%8b4const-%e4%b8%8e%e6%8c%87%e9%92%88">例4：const 与指针</a></li>
             <li><a href="/posts/pointer-array-and-const/#%e7%bb%93%e8%af%ad">结语</a></li>
-            <li><a href="/posts/pointer-array-and-const/#%e6%9b%b4%e6%96%b0-%e5%87%bd%e6%95%b0%e6%8c%87%e9%92%88">更新：函数指针</a></li>
+            <li><a href="/posts/pointer-array-and-const/#%e6%9b%b4%e6%96%b0%e5%87%bd%e6%95%b0%e6%8c%87%e9%92%88">更新：函数指针</a></li>
             
                     <ul class="toc-h3"><li><a href="/posts/pointer-array-and-const/#%e5%86%99%e6%b3%95">写法</a></li>
             <li><a href="/posts/pointer-array-and-const/#%e4%bd%bf%e7%94%a8%e4%b8%be%e4%be%8b">使用举例</a></li>
             <div class="markdown">
-			
-
-<p>上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。</p>
-
-<h2 id="例1-指针与数字相加">例1：指针与数字相加</h2>
+			<p>上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。</p>
+<h2 id="例1指针与数字相加">例1：指针与数字相加</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 1.array.c */</span>
 <span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
 </span><span style="color:#00f"></span>
@@ -129,15 +175,14 @@
     printf(<span style="color:#a31515">&#34;*c:       %u</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, *c);
 
     <span style="color:#00f">return</span> 0;
-}</code></pre></div>
-<ul>
+}
+</code></pre></div><ul>
 <li>sizeof(数组名) 返回整个数组占用的字节数</li>
 <li>sizeof(指针) 返回指针本身的大小，对于 64 位机器来说就是 8</li>
 <li>指针和数组名加 1，得到的都是下一个元素的地址</li>
 <li>指针强转成 long 之后，加上元素的大小，可以得到下一个元素的地址，不过这样做没什么意义</li>
 </ul>
-
-<h2 id="例2-指针与字符串">例2：指针与字符串</h2>
+<h2 id="例2指针与字符串">例2：指针与字符串</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 2.char_pointer.c */</span>
 <span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
 </span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;string.h&gt;</span><span style="color:#00f">
@@ -158,23 +203,22 @@
     printf(<span style="color:#a31515">&#34;strlen of b: %lu</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, strlen(b));
 
     <span style="color:#00f">return</span> 0;
-}</code></pre></div>
-<p>输出：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sizeof a:    8
+}
+</code></pre></div><p>输出：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">sizeof a:    8
 strlen of a: 5
 a[0]:        h
 a[5]:        0
 a[6]:        115
 sizeof b:    6
-strlen of b: 5</pre></div>
-<ul>
-<li><code>char* a = &quot;hello&quot;;</code> 中 a 是一个指针，&rdquo;hello&rdquo; 存储在 .rodata 段，a 中保存的是 &ldquo;hello&rdquo; 的首地址</li>
+strlen of b: 5
+</code></pre></div><ul>
+<li><code>char* a = &quot;hello&quot;;</code> 中 a 是一个指针，&ldquo;hello&rdquo; 存储在 .rodata 段，a 中保存的是 &ldquo;hello&rdquo; 的首地址</li>
 <li>strlen(a) 得到的是 &ldquo;hello&rdquo; 不含结尾 &lsquo;\0&rsquo; 的长度，也就是 5；sizeof(a) 是指针的大小也就是 8</li>
-<li><code>char b[] = &quot;world&quot;</code> 中 b 是一个字符数组，&rdquo;world&rdquo; 在栈上，sizeof(b) 包含末尾的 <code>\0</code>，也就是 6</li>
+<li><code>char b[] = &quot;world&quot;</code> 中 b 是一个字符数组，&ldquo;world&rdquo; 在栈上，sizeof(b) 包含末尾的 <code>\0</code>，也就是 6</li>
 <li>C 不做数组越界检查，但 <code>a[6]</code> 这种表达式的值是未定义的</li>
 </ul>
-
-<h2 id="例3-char-和-char-a">例3：<code>char**</code> 和 <code>char* a[]</code></h2>
+<h2 id="例3char-和-char-a">例3：<code>char**</code> 和 <code>char* a[]</code></h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 3.char_pointer_array.c */</span>
 <span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
 </span><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdlib.h&gt;</span><span style="color:#00f">
@@ -232,9 +276,9 @@ strlen of b: 5</pre></div>
     free(b);
 
     <span style="color:#00f">return</span> 0;
-}</code></pre></div>
-<p>输出：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">a:     0x7fff827965b0
+}
+</code></pre></div><p>输出：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">a:     0x7fff827965b0
 *a:    0x400a51
 a[0]:  0x400a51
 a[1]:  0x400a56
@@ -263,8 +307,8 @@ len of b: 1
 sizeof c: 8
 len of c: 1
 a[1]:   0x400b3d
-c[1]:   0x400b3d</pre></div>
-<ul>
+c[1]:   0x400b3d
+</code></pre></div><ul>
 <li>a 是一个 <code>char*</code> 的数组，内容是五个字符串的首地址，五个字符串都保存在 .rodata 段</li>
 <li>a 自身在栈上，占用 <code>8 × 5 = 40</code> 个字节</li>
 <li>b 是一个指针，大小是 8 个字节，malloc 分配了 4 个 <code>char*</code> 大小的空间给 b，b 可以安全使用其 32 个字节</li>
@@ -272,19 +316,15 @@ c[1]:   0x400b3d</pre></div>
 <li>a、b、c 的内容都可以重新赋值，使用起来应该没有什么区别</li>
 <li><code>char**</code> 和 <code>char* a[]</code> 都可以作为 <code>char**</code> 和 <code>char* a[]</code> 的参数使用</li>
 </ul>
-
 <p>总的来说，没看到 <code>char**</code> 和 <code>char* a[]</code> 在使用上有太大区别，都是一段内存的首地址，这块内存中保存的是 <code>char*</code> 指针。使用的时候注意这块内存大小是多少，不要越界访问即可。</p>
-
 <h3 id="柔性数组-flexible-array-用法">柔性数组 (Flexible Array) 用法</h3>
-
 <p>最近看 Python 3 整数实现的时候看到柔性数组的用法，跟这一块联系比较密切，这里顺带介绍一下。</p>
-
 <p>下面的代码在 cpython 的 Include/longintrepr.h：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00f">struct</span> _longobject {
     PyObject_VAR_HEAD
     digit ob_digit[1];
-};</code></pre></div>
-<p>整数对象的末尾处有一个表示位数的数组，数组长度是 1，这个数组就是柔性数组。柔性数组有的时候也会写成长度为 0 的数组。使用的时候会根据具体需要为数组动态分配空间：</p>
+};
+</code></pre></div><p>整数对象的末尾处有一个表示位数的数组，数组长度是 1，这个数组就是柔性数组。柔性数组有的时候也会写成长度为 0 的数组。使用的时候会根据具体需要为数组动态分配空间：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* cpython/Objects/longobject.c */</span>
 PyLongObject *
 _PyLong_New(Py_ssize_t size)
@@ -307,10 +347,9 @@ _PyLong_New(Py_ssize_t size)
         <span style="color:#00f">return</span> NULL;
     }
     <span style="color:#00f">return</span> (PyLongObject*)PyObject_INIT_VAR(result, &amp;PyLong_Type, size);
-}</code></pre></div>
-<p>其中对 PyObject_MALLOC 的调用就是典型的柔性数组用法，为整数对象分配空间时，除了头部固定大小的空间，还会根据实际需要的 digit 长度动态分配空间。使用的时候，通过 ob_digit 数组名访问动态分配的这块内存即可。</p>
-
-<h2 id="例4-const-与指针">例4：const 与指针</h2>
+}
+</code></pre></div><p>其中对 PyObject_MALLOC 的调用就是典型的柔性数组用法，为整数对象分配空间时，除了头部固定大小的空间，还会根据实际需要的 digit 长度动态分配空间。使用的时候，通过 ob_digit 数组名访问动态分配的这块内存即可。</p>
+<h2 id="例4const-与指针">例4：const 与指针</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#008000">/* 4.const_with_pointer.c */</span>
 <span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
 </span><span style="color:#00f"></span>
@@ -337,24 +376,18 @@ _PyLong_New(Py_ssize_t size)
     printf(<span style="color:#a31515">&#34;ci: %d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, ci);
 
     <span style="color:#00f">return</span> 0;
-}</code></pre></div>
-<ul>
+}
+</code></pre></div><ul>
 <li><code>const int*</code> 和 <code>int const*</code> 是等同的，是常量指针，表示指针指向的是 const int，无法通过常量指针修改指向的变量的值。Google 编程风格比较推荐 <code>const int*</code> 的写法，这样写也确实更自然</li>
 <li><code>int* const cpi</code> 表示指针常量，指向的是一个整数。指针本身是常量，只能在声明的时候赋值，后续无法再修改。无论用于初始化的是常量的地址还是非常量的地址，都可以通过这个指针修改其值</li>
 <li><code>const int* const</code> 就表示指向常量的指针常量，指针本身不能重新赋值，也不能通过这个指针为指向的变量赋值</li>
 <li>const 修饰一个变量，是说不能通过这个变量名修改对应的内存块的内容，如果又定义一个非常量指针指向这块内存，还是可以通过这个指针修改这块内存的内容。也就是 const 限制的是其修饰的变量/指针，限定的是你能不能通过这个变量名、指针去修改对应的内存块的内容</li>
 </ul>
-
 <h2 id="结语">结语</h2>
-
 <p>下次再看一下函数指针，这样指针这一块的东西就都很清楚了。</p>
-
-<h2 id="更新-函数指针">更新：函数指针</h2>
-
+<h2 id="更新函数指针">更新：函数指针</h2>
 <p>看了一下，函数指针这块除了复杂的嵌套之外，好像没有太多进阶用法了，这里简单记一下。</p>
-
 <p>对于复杂的嵌套，一般用的不会太多，看代码遇到的话，按符号优先级从里向外展开基本也都能看懂。</p>
-
 <p>例子：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#00f">#include</span> <span style="color:#00f">&lt;stdio.h&gt;</span><span style="color:#00f">
 </span><span style="color:#00f"></span>
@@ -369,13 +402,10 @@ _PyLong_New(Py_ssize_t size)
     printf(<span style="color:#a31515">&#34;%d</span><span style="color:#a31515">\n</span><span style="color:#a31515">&#34;</span>, fp(3, 4));
 
     <span style="color:#00f">return</span> 0;
-}</code></pre></div>
-<h3 id="写法">写法</h3>
-
-<p><code>= max</code> 或者 <code>= &amp;max</code> 都可以，<code>fp(3, 4)</code> 或者 <code>(*fp)(3, 4)</code> 都可以。</p>
-
+}
+</code></pre></div><h3 id="写法">写法</h3>
+<p><code> = max</code> 或者 <code>= &amp;max</code> 都可以，<code>fp(3, 4)</code> 或者 <code>(*fp)(3, 4)</code> 都可以。</p>
 <h3 id="使用举例">使用举例</h3>
-
 <ul>
 <li>函数指针作为 struct 的成员变量，实现类似于类中成员函数的效果</li>
 <li>函数指针指向不同类型数据的处理函数，实现类似于 C++ 模板的效果</li>
@@ -383,12 +413,15 @@ _PyLong_New(Py_ssize_t size)
 <li>函数指针作为参数传入，实现类似于回调的效果</li>
 </ul>
 
-		</div></div>
+		</div>
+		</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>

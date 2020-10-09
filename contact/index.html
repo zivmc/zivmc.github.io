@@ -12,16 +12,56 @@
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Contact"/>
 <meta name="twitter:description" content="This is the contact page."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <body>
 	<div class="container wrapper post">
 		<div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -61,8 +101,11 @@
 
     <div class="post-header">
         <h1 class="title">Contact</h1>
-        <div class="meta">Posted at &mdash; Sep 30, 2019</div>
+        <div class="meta">
+            Posted &mdash; Sep 30, 2019&nbsp;&nbsp;
+            &nbsp;&nbsp;
             
+        </div>
 
 
 
@@ -70,12 +113,15 @@
 <div class="markdown">
 			<p>This is the contact page.</p>
 
-		</div></div>
+		</div>
+		</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>

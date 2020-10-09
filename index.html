@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="generator" content="Hugo 0.59.0-DEV" />
+	<meta name="generator" content="Hugo 0.76.3" />
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Ziv&#39;s Blog - Notes taken for future reference. </title><meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="alternate" type="application/rss+xml" href="https://zivmc.github.io/index.xml" title="Ziv's Blog" />
@@ -9,21 +9,24 @@
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://zivmc.github.io/" />
-
 <meta property="og:updated_time" content="2019-09-30T10:17:04+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content=""/>
 <meta name="twitter:description" content=""/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
 
 <body>
 	<div class="container wrapper">
-		 <div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+		<div class="header">
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -61,6 +64,8 @@
 </div>
 
 
+		
+
 		<div class="recent-posts section">
 			<h2 class="section-header">
 				Recent posts
@@ -70,120 +75,97 @@
 				
 				
 				<div class="post">
-					<div class="meta">Dec 12, 2019</div>
-					<a class="title" href="/posts/android-smart-pointer/">Android 智能指针</a> &mdash;
+					<a class="title" href="/posts/android-smart-pointer/">Android 智能指针</a>
+					<div class="meta">
+						Dec 12, 2019
+					</div>
 					<span class="description">
 						
-						
-最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 `Android-8.1.0_r1`，不同版本 Android 在这一块的实现差异还是比较小的。
-
-## 智能指针简介
-
-以 C&#43;&#43; 标准库的 `shared_p...
+						最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Nov 15, 2019</div>
-					<a class="title" href="/posts/pointer-array-and-const/">指针、数组和 const</a> &mdash;
+					<a class="title" href="/posts/pointer-array-and-const/">指针、数组和 const</a>
+					<div class="meta">
+						Nov 15, 2019
+					</div>
 					<span class="description">
 						
-						
-上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。
-
-## 例1：指针与数字相加
-
-```c
-/* 1.array.c */
-#include &lt;stdio.h&gt;
-
-int main()
-{
- ...
+						上一篇看了初始化和未初始化的指针，这次写了几个例子接着看一下指针、数组和 const 修饰符。&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Nov 13, 2019</div>
-					<a class="title" href="/posts/check-pointers-with-gdb/">gdb 查看 C 中未初始化的指针</a> &mdash;
+					<a class="title" href="/posts/check-pointers-with-gdb/">gdb 查看 C 中未初始化的指针</a>
+					<div class="meta">
+						Nov 13, 2019
+					</div>
 					<span class="description">
 						
-						
-C 的指针这一块学得不是特别好，最近准备深入看一下，这里先用看一下 C 中未初始化的指针相关的问题。
-
-## 使用 gdb
-
-- 编译时输出调试信息：使用 -g 编译选项
-- 打开文件：gdb a.out
-- 查看源码：list 或 l，...
+						C 的指针这一块学得不是特别好，最近准备深入看一下，这里先用看一下 C 中未初始化的指针相关的问题。&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Nov 12, 2019</div>
-					<a class="title" href="/posts/hal-examples-from-kernel-driver-to-an-application/">Android 硬件抽象层相关的一组例子</a> &mdash;
+					<a class="title" href="/posts/hal-examples-from-kernel-driver-to-an-application/">Android 硬件抽象层相关的一组例子</a>
+					<div class="meta">
+						Nov 12, 2019
+					</div>
 					<span class="description">
 						
-						
-最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：
-
-- 在内核中添加一个字符设备驱动
-- 在硬件抽象层添加对应的硬件抽象层模块...
+						最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Nov 10, 2019</div>
-					<a class="title" href="/posts/use-openssl-to-sign-and-verify-files/">使用 openssl 对文件签名和验签</a> &mdash;
+					<a class="title" href="/posts/use-openssl-to-sign-and-verify-files/">使用 openssl 对文件签名和验签</a>
+					<div class="meta">
+						Nov 10, 2019
+					</div>
 					<span class="description">
 						
-						
-这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。
-
-&gt; 其中 C 程序验签的例子来自 [PAGE FAULT BLOG](https://pagef...
+						这里介绍三个点：文件签名和验签做了什么，openssl 命令行工具进行签名和验签，在 C 程序中调用 openssl 接口进行签名和验签。&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Nov 1, 2019</div>
-					<a class="title" href="/posts/build-and-replace-aosp-msm-kernel/">Nexus 5X 编译替换 AOSP msm 内核</a> &mdash;
+					<a class="title" href="/posts/build-and-replace-aosp-msm-kernel/">Nexus 5X 编译替换 AOSP msm 内核</a>
+					<div class="meta">
+						Nov 1, 2019
+					</div>
 					<span class="description">
 						
-						
-最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。
-
-## 下载代码
-
-Google 其实给了编译内核的文档，[在这里](https://source.and...
+						最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Oct 28, 2019</div>
-					<a class="title" href="/posts/python-subprocess-capture-output/">subprocess 模块使用 bash 运行命令并捕捉输出</a> &mdash;
+					<a class="title" href="/posts/python-subprocess-capture-output/">subprocess 模块使用 bash 运行命令并捕捉输出</a>
+					<div class="meta">
+						Oct 28, 2019
+					</div>
 					<span class="description">
 						
-						
-背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：
-
-```...
+						背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：&hellip;
 						
 					</span>
 				</div>
 				
 				<div class="post">
-					<div class="meta">Oct 10, 2019</div>
-					<a class="title" href="/posts/android-6.0-extract-drivers-from-factory-image/">从 Android 6.0 factory image 中提取驱动</a> &mdash;
+					<a class="title" href="/posts/android-6.0-extract-drivers-from-factory-image/">从 Android 6.0 factory image 中提取驱动</a>
+					<div class="meta">
+						Oct 10, 2019
+					</div>
 					<span class="description">
 						
-						
-背景是 Google 的 [Driver Binaries](https://developers.google.com/android/drivers) 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱...
+						背景是 Google 的 Driver Binaries 页面不提供 Android 6.&hellip;
 						
 					</span>
 				</div>
@@ -196,9 +178,11 @@ Google 其实给了编译内核的文档，[在这里](https://source.and...
 	</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>

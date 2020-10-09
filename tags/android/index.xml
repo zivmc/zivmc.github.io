@@ -6,23 +6,14 @@
     <description>Recent content in Android on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Dec 2019 16:03:01 +0800</lastBuildDate>
-    
-	<atom:link href="https://zivmc.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 12 Dec 2019 16:03:01 +0800</lastBuildDate><atom:link href="https://zivmc.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Android 智能指针</title>
       <link>https://zivmc.github.io/posts/android-smart-pointer/</link>
       <pubDate>Thu, 12 Dec 2019 16:03:01 +0800</pubDate>
       
       <guid>https://zivmc.github.io/posts/android-smart-pointer/</guid>
-      <description>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.1.0_r1，不同版本 Android 在这一块的实现差异还是比较小的。
-智能指针简介 以 C++ 标准库的 shared_ptr 为例，每次有新的 shared_ptr 指向同一个对象，这个对象的引用计数就会加 1；当一个 shared_ptr 不再指向这个对象时，这个对象的引用计数就会减 1；当引用计数减为 0 时，就将这个对象释放掉。实现的大致思路就是在智能指针的构造函数中引用计数加 1，在析构函数中引用计数减 1。
-当对象 A 有对象 B 的智能指针作为成员变量，对象 B 也有对象 A 的智能指针作为成员变量时，由于同时只能释放一个对象，尝试释放 A 时，发现 A 还被 B 引用，A 就不会被释放，尝试释放 B 时也是类似的。这样 A 和 B 在程序退出之前就不会被释放掉，实际上造成了内存泄露。
-为了解决上面的相互引用问题，又有了 weak_ptr 的概念，weak_ptr 指向一个对象时，不会增加这个对象的（强）引用计数。如果把上面 A 和 B 中的智能指针替换为 weak_ptr，那么相互引用就不会影响对象的释放了。
-Android 中的智能指针在行为上跟上面的介绍基本是一致的，有强指针类型 sp 和弱指针类型 wp，对应分别有强引用计数和弱引用计数。智能指针的源码就是下面这三个文件：
-system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/utils/RefBase.h system/core/libutils/RefBase.cpp 其中 StrongPointer.h 中是强指针 sp 这个模板类的定义和实现；RefBase.h 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；RefBase.</description>
+      <description>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.</description>
     </item>
     
     <item>
@@ -31,14 +22,7 @@ system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/
       <pubDate>Tue, 12 Nov 2019 19:29:38 +0800</pubDate>
       
       <guid>https://zivmc.github.io/posts/hal-examples-from-kernel-driver-to-an-application/</guid>
-      <description>最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：
- 在内核中添加一个字符设备驱动 在硬件抽象层添加对应的硬件抽象层模块 在 Framework 和 Native Framework 层添加访问服务 最后开发一个 Android 应用使用 Framework 层的服务  原书使用的代码比较老，Android 版本是 2.3.1，内核版本是 2.6.29，例子中的很多代码在较新版本的 Android 上已经不再适用。这里对书中的例子做了一些修改，使之能在较新版本的 Android 设备上运行和调试。
-这里使用的环境：
- 设备是 Nexus 5X（bullhead） Android 版本是 android-8.1.0_r1，lunch 选项是 aosp_bullhead-userdebug 内核分支是 remotes/origin/android-msm-bullhead-3.10-oreo-mr1  用文字讲代码实在是一件很吃力的事情，因此这里直接给出以下所有代码的 链接，以下只简单介绍代码做了什么，适配了哪些地方等。
-向内核添加驱动程序 书中这部分代码用到的一些接口在 v3.10 的内核上已经不再可用，这里直接使用 http://derekmolloy.ie 给出的添加驱动程序的代码。
-ebbchar.c 即为驱动的代码，作用是创建 /dev/ebbchar 这个设备，并实现对这个设备进行读写时的处理操作。用户可以使用 read 和 write 函数对 /dev/ebbchar 这个设备进行字符串的读写。
-ebbchar.c 置于 &amp;ldquo;kernel/drivers/ebbchar/&amp;rdquo; 目录下，并添加、修改相关的 Kconfig、Makefile 文件之后，重新编译内核即可。
- 编译和替换内核在 Nexus 5X 编译替换 AOSP msm 内核 这篇文章里有介绍。</description>
+      <description>最近读了《Android 系统源代码情景分析》一书的第二章，通过一组硬件抽象层相关的例子，从内核到应用层完整地介绍了 Android 的体系结构。这组例子包括：</description>
     </item>
     
     <item>
@@ -47,15 +31,7 @@ ebbchar.c 置于 &amp;ldquo;kernel/drivers/ebbchar/&amp;rdquo; 目录下，并�
       <pubDate>Fri, 01 Nov 2019 10:32:04 +0800</pubDate>
       
       <guid>https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/</guid>
-      <description>最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。
-下载代码 Google 其实给了编译内核的文档，在这里。
- 上面的链接是 Pixel 之前设备的内核编译方法，Google 为 Pixel 之后的设备做了另一套编译工具，在上面的页面中也可以找到链接。
- 下载 msm 内核代码就直接使用 git：
-git clone https://android.googlesource.com/kernel/msm 如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：
-git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm 下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):
-git branch -a | grep &amp;#34;3.10&amp;#34; | grep &amp;#34;bullhead&amp;#34; | grep &amp;#34;oreo&amp;#34; 从结果中选一个分支 checkout 出来：
-git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。
- 编译内核 编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可：</description>
+      <description>最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。</description>
     </item>
     
     <item>
@@ -64,9 +40,7 @@ git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分�
       <pubDate>Thu, 10 Oct 2019 01:07:49 +0800</pubDate>
       
       <guid>https://zivmc.github.io/posts/android-6.0-extract-drivers-from-factory-image/</guid>
-      <description>背景是 Google 的 Driver Binaries 页面不提供 Android 6.0 的驱动，Android 6.0 之前和之后的驱动都有提供。这里介绍一种使用 android-prepare-vendor 工具从 factory image 中提取驱动的方法。
-准备 工具  android-prepare-vendor 工具 android-prepare-vendor 依赖的其他工具，android-simg2img、dexRepair 等，可根据 android-prepare-vendor 运行时的错误信息搜索安装  修改 android-prepare-vendor 我使用的最新 commit 为 e853d17c89f6962d3fd6f408db8576e6b445f643 的版本，在处理中间文件时会有一些权限问题，因此需要打上下面这个 patch：
-diff --git a/scripts/generate-vendor.sh b/scripts/generate-vendor.sh index b7c96a5..a601ac4 100755 --- a/scripts/generate-vendor.sh +++ b/scripts/generate-vendor.sh @@ -217,6 +217,10 @@ extract_blobs() { # writing to destination) outPath=&amp;#34;$outBase/$dstDir/$(basename &amp;#34;$src&amp;#34;)&amp;#34; + if test -f &amp;#34;$outPath&amp;#34;; then + chmod +rwx $outPath + fi + cp -a &amp;#34;$inDir/$src&amp;#34; &amp;#34;$outPath&amp;#34; || { echo &amp;#34;[-] Failed to copy &amp;#39;$src&amp;#39;&amp;#34; abort 1 -- 2.</description>
+      <description>背景是 Google 的 Driver Binaries 页面不提供 Android 6.</description>
     </item>
     
   </channel>

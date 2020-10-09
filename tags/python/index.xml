@@ -6,19 +6,14 @@
     <description>Recent content in Python on Ziv&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Oct 2019 16:50:52 +0800</lastBuildDate>
-    
-	<atom:link href="https://zivmc.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 28 Oct 2019 16:50:52 +0800</lastBuildDate><atom:link href="https://zivmc.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>subprocess 模块使用 bash 运行命令并捕捉输出</title>
       <link>https://zivmc.github.io/posts/python-subprocess-capture-output/</link>
       <pubDate>Mon, 28 Oct 2019 16:50:52 +0800</pubDate>
       
       <guid>https://zivmc.github.io/posts/python-subprocess-capture-output/</guid>
-      <description>背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：
-function validate_current_shell() { local current_sh=&amp;#34;$(ps -o command -p $$)&amp;#34; case &amp;#34;$current_sh&amp;#34; in *bash*) function check_type() { type -t &amp;#34;$1&amp;#34;; } ;; *zsh*) function check_type() { type &amp;#34;$1&amp;#34;; } enable_zsh_completion ;; *) echo -e &amp;#34;WARNING: Only bash and zsh are supported.\nUse of other shell would lead to erroneous results.&amp;#34; ;; esac } 之前实现的脚本中，os.system() 函数，以及默认的 subprocess 模块，都会调用 /bin/sh 执行命令。尽管 /bin/sh 指向的是 /bin/bash，这里还是不能正确定义出 check_type() 函数。</description>
+      <description>背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：</description>
     </item>
     
   </channel>

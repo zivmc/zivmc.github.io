@@ -4,26 +4,64 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>subprocess 模块使用 bash 运行命令并捕捉输出 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta property="og:title" content="subprocess 模块使用 bash 运行命令并捕捉输出" />
-<meta property="og:description" content="背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：
-function validate_current_shell() { local current_sh=&#34;$(ps -o command -p $$)&#34; case &#34;$current_sh&#34; in *bash*) function check_type() { type -t &#34;$1&#34;; } ;; *zsh*) function check_type() { type &#34;$1&#34;; } enable_zsh_completion ;; *) echo -e &#34;WARNING: Only bash and zsh are supported.\nUse of other shell would lead to erroneous results.&#34; ;; esac } 之前实现的脚本中，os.system() 函数，以及默认的 subprocess 模块，都会调用 /bin/sh 执行命令。尽管 /bin/sh 指向的是 /bin/bash，这里还是不能正确定义出 check_type() 函数。" />
+<meta property="og:description" content="背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zivmc.github.io/posts/python-subprocess-capture-output/" />
 <meta property="article:published_time" content="2019-10-28T16:50:52+08:00" />
 <meta property="article:modified_time" content="2019-10-28T16:50:52+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="subprocess 模块使用 bash 运行命令并捕捉输出"/>
-<meta name="twitter:description" content="背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：
-function validate_current_shell() { local current_sh=&#34;$(ps -o command -p $$)&#34; case &#34;$current_sh&#34; in *bash*) function check_type() { type -t &#34;$1&#34;; } ;; *zsh*) function check_type() { type &#34;$1&#34;; } enable_zsh_completion ;; *) echo -e &#34;WARNING: Only bash and zsh are supported.\nUse of other shell would lead to erroneous results.&#34; ;; esac } 之前实现的脚本中，os.system() 函数，以及默认的 subprocess 模块，都会调用 /bin/sh 执行命令。尽管 /bin/sh 指向的是 /bin/bash，这里还是不能正确定义出 check_type() 函数。"/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<meta name="twitter:description" content="背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数："/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <body>
 	<div class="container wrapper post">
 		<div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -63,24 +101,33 @@ function validate_current_shell() { local current_sh=&#34;$(ps -o command -p $$)
 
     <div class="post-header">
         <h1 class="title">subprocess 模块使用 bash 运行命令并捕捉输出</h1>
-        <div class="meta">Posted at &mdash; Oct 28, 2019</div>
+        <div class="meta">
+            Posted &mdash; Oct 28, 2019&nbsp;&nbsp;
             
-            Categories &#x5b;
-            <a href="https://zivmc.github.io/categories/tech/">tech</a>
-            &#x5d;
-            Tags &#x5b;
-            <a href="https://zivmc.github.io/tags/python/">Python</a>
-            &#x5d;
+                
+                    Category &mdash;
+                        
+                        <a href="/categories/tech">tech</a>
+                        
+                
+            &nbsp;&nbsp;
+            
+                
+                    Tag &mdash;
+                        
+                        <a href="/tags/python">Python</a>
+                        
+                
+            
+        </div>
 
 
 
 
-<ul class="toc-h2"><li><a href="/posts/python-subprocess-capture-output/#subprocess-%e4%bd%bf%e7%94%a8-bin-bash-%e6%89%a7%e8%a1%8c%e5%91%bd%e4%bb%a4">subprocess 使用 /bin/bash 执行命令</a></li>
+<ul class="toc-h2"><li><a href="/posts/python-subprocess-capture-output/#subprocess-%e4%bd%bf%e7%94%a8-binbash-%e6%89%a7%e8%a1%8c%e5%91%bd%e4%bb%a4">subprocess 使用 /bin/bash 执行命令</a></li>
             <li><a href="/posts/python-subprocess-capture-output/#%e6%8d%95%e6%8d%89-subprocess-%e7%9a%84%e8%be%93%e5%87%ba">捕捉 subprocess 的输出</a></li>
             <div class="markdown">
-			
-
-<p>背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：</p>
+			<p>背景是使用 Python 写脚本编译 Android 10 源码时，源码的某些 Makefile 文件会检查正在使用的 shell，并根据使用的 shell 是 bash 或 zsh，定义不同的 check_type() 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#00f">function</span> validate_current_shell() {
     local current_sh=<span style="color:#a31515">&#34;</span><span style="color:#00f">$(</span>ps -o command -p $$<span style="color:#00f">)</span><span style="color:#a31515">&#34;</span>
     <span style="color:#00f">case</span> <span style="color:#a31515">&#34;</span>$current_sh<span style="color:#a31515">&#34;</span> in
@@ -94,39 +141,35 @@ function validate_current_shell() { local current_sh=&#34;$(ps -o command -p $$)
             echo -e <span style="color:#a31515">&#34;WARNING: Only bash and zsh are supported.\nUse of other shell would lead to erroneous results.&#34;</span>
             ;;
     <span style="color:#00f">esac</span>
-}</code></pre></div>
-<p>之前实现的脚本中，os.system() 函数，以及默认的 subprocess 模块，都会调用 <code>/bin/sh</code> 执行命令。尽管 <code>/bin/sh</code> 指向的是 <code>/bin/bash</code>，这里还是不能正确定义出 check_type() 函数。</p>
-
-<h2 id="subprocess-使用-bin-bash-执行命令">subprocess 使用 /bin/bash 执行命令</h2>
-
+}
+</code></pre></div><p>之前实现的脚本中，os.system() 函数，以及默认的 subprocess 模块，都会调用 <code>/bin/sh</code> 执行命令。尽管 <code>/bin/sh</code> 指向的是 <code>/bin/bash</code>，这里还是不能正确定义出 check_type() 函数。</p>
+<h2 id="subprocess-使用-binbash-执行命令">subprocess 使用 /bin/bash 执行命令</h2>
 <p>只需要把 <code>/bin/bash</code> 作为 <code>executable</code> 参数传给 subprocess 的 Popen 函数即可：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p = subprocess.Popen(cmd, shell=True, executable=<span style="color:#a31515">&#39;/bin/bash&#39;</span>)</code></pre></div>
-<h2 id="捕捉-subprocess-的输出">捕捉 subprocess 的输出</h2>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p = subprocess.Popen(cmd, shell=True, executable=<span style="color:#a31515">&#39;/bin/bash&#39;</span>)
+</code></pre></div><h2 id="捕捉-subprocess-的输出">捕捉 subprocess 的输出</h2>
 <p>这里实际有两个需求，一是把运行命令的输出保存到变量中方便后续处理，二是顾及一下用户体验，把命令输出同时打印到 console（也就是主进程的 stdout）。</p>
-
 <p>子进程的运行命令的输出实际有两部分，一部分是 stdout，一部分是 stderr，也可以通过向 Popen 函数传参的方式将其重定向到其他文件：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=sys.stdout,
-                     shell=True, executable=<span style="color:#a31515">&#39;/bin/bash&#39;</span>)</code></pre></div>
-<p>上面将子进程的 stdout 重定向到了 subprocess.PIPE，后续可以通过 subprocess 的接口取出来，子进程的 stderr 重定向到了 sys.stdout，效果是实时地打印到 console，但无法捕捉保存下来。</p>
-
+                     shell=True, executable=<span style="color:#a31515">&#39;/bin/bash&#39;</span>)
+</code></pre></div><p>上面将子进程的 stdout 重定向到了 subprocess.PIPE，后续可以通过 subprocess 的接口取出来，子进程的 stderr 重定向到了 sys.stdout，效果是实时地打印到 console，但无法捕捉保存下来。</p>
 <p>下面的例子将 subprocess.PIPE 中的子进程 stdout 取出、保存、实时输出：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">outputs = <span style="color:#a31515">&#34;&#34;</span>
 <span style="color:#00f">for</span> l <span style="color:#00f">in</span> iter(p.stdout.readline, <span style="color:#a31515">b</span><span style="color:#a31515">&#39;&#39;</span>):
     sys.stdout.write(l.decode(<span style="color:#a31515">&#34;utf-8&#34;</span>))
-    outputs += l.decode(<span style="color:#a31515">&#34;utf-8&#34;</span>)</code></pre></div>
-<p>类似地，如果将 p 的 stderr 重定向到 subprocess.PIPE，也可以用  p.stderr.readline 取出错误输出，并保存下来。</p>
-
+    outputs += l.decode(<span style="color:#a31515">&#34;utf-8&#34;</span>)
+</code></pre></div><p>类似地，如果将 p 的 stderr 重定向到 subprocess.PIPE，也可以用  p.stderr.readline 取出错误输出，并保存下来。</p>
 <p>由于这里的 stdout.readline 和 stderr.readline 都是阻塞的，没想到比较简单的方法可以把两者同时实时输出到 console 并保存到变量中。不过，stderr 实时打印、stdout 实时打印并保存下来，也已经基本满足一个编译脚本的需求了。</p>
-
 <p>当然，也可以在迭代 p.stdout.readline 之后，再迭代 p.stderr.readline。这样可以把两者都保存下来，但是无法两者都实时输出。</p>
 
-		</div></div>
+		</div>
+		</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>

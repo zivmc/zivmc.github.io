@@ -4,34 +4,64 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Android 智能指针 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta property="og:title" content="Android 智能指针" />
-<meta property="og:description" content="最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.1.0_r1，不同版本 Android 在这一块的实现差异还是比较小的。
-智能指针简介 以 C&#43;&#43; 标准库的 shared_ptr 为例，每次有新的 shared_ptr 指向同一个对象，这个对象的引用计数就会加 1；当一个 shared_ptr 不再指向这个对象时，这个对象的引用计数就会减 1；当引用计数减为 0 时，就将这个对象释放掉。实现的大致思路就是在智能指针的构造函数中引用计数加 1，在析构函数中引用计数减 1。
-当对象 A 有对象 B 的智能指针作为成员变量，对象 B 也有对象 A 的智能指针作为成员变量时，由于同时只能释放一个对象，尝试释放 A 时，发现 A 还被 B 引用，A 就不会被释放，尝试释放 B 时也是类似的。这样 A 和 B 在程序退出之前就不会被释放掉，实际上造成了内存泄露。
-为了解决上面的相互引用问题，又有了 weak_ptr 的概念，weak_ptr 指向一个对象时，不会增加这个对象的（强）引用计数。如果把上面 A 和 B 中的智能指针替换为 weak_ptr，那么相互引用就不会影响对象的释放了。
-Android 中的智能指针在行为上跟上面的介绍基本是一致的，有强指针类型 sp 和弱指针类型 wp，对应分别有强引用计数和弱引用计数。智能指针的源码就是下面这三个文件：
-system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/utils/RefBase.h system/core/libutils/RefBase.cpp 其中 StrongPointer.h 中是强指针 sp 这个模板类的定义和实现；RefBase.h 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；RefBase." />
+<meta property="og:description" content="最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zivmc.github.io/posts/android-smart-pointer/" />
 <meta property="article:published_time" content="2019-12-12T16:03:01+08:00" />
 <meta property="article:modified_time" content="2019-12-12T16:03:01+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Android 智能指针"/>
-<meta name="twitter:description" content="最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8.1.0_r1，不同版本 Android 在这一块的实现差异还是比较小的。
-智能指针简介 以 C&#43;&#43; 标准库的 shared_ptr 为例，每次有新的 shared_ptr 指向同一个对象，这个对象的引用计数就会加 1；当一个 shared_ptr 不再指向这个对象时，这个对象的引用计数就会减 1；当引用计数减为 0 时，就将这个对象释放掉。实现的大致思路就是在智能指针的构造函数中引用计数加 1，在析构函数中引用计数减 1。
-当对象 A 有对象 B 的智能指针作为成员变量，对象 B 也有对象 A 的智能指针作为成员变量时，由于同时只能释放一个对象，尝试释放 A 时，发现 A 还被 B 引用，A 就不会被释放，尝试释放 B 时也是类似的。这样 A 和 B 在程序退出之前就不会被释放掉，实际上造成了内存泄露。
-为了解决上面的相互引用问题，又有了 weak_ptr 的概念，weak_ptr 指向一个对象时，不会增加这个对象的（强）引用计数。如果把上面 A 和 B 中的智能指针替换为 weak_ptr，那么相互引用就不会影响对象的释放了。
-Android 中的智能指针在行为上跟上面的介绍基本是一致的，有强指针类型 sp 和弱指针类型 wp，对应分别有强引用计数和弱引用计数。智能指针的源码就是下面这三个文件：
-system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/utils/RefBase.h system/core/libutils/RefBase.cpp 其中 StrongPointer.h 中是强指针 sp 这个模板类的定义和实现；RefBase.h 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；RefBase."/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<meta name="twitter:description" content="最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 Android-8."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <body>
 	<div class="container wrapper post">
 		<div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -71,14 +101,25 @@ system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/
 
     <div class="post-header">
         <h1 class="title">Android 智能指针</h1>
-        <div class="meta">Posted at &mdash; Dec 12, 2019</div>
+        <div class="meta">
+            Posted &mdash; Dec 12, 2019&nbsp;&nbsp;
             
-            Categories &#x5b;
-            <a href="https://zivmc.github.io/categories/tech/">tech</a>
-            &#x5d;
-            Tags &#x5b;
-            <a href="https://zivmc.github.io/tags/android/">Android</a>
-            &#x5d;
+                
+                    Category &mdash;
+                        
+                        <a href="/categories/tech">tech</a>
+                        
+                
+            &nbsp;&nbsp;
+            
+                
+                    Tag &mdash;
+                        
+                        <a href="/tags/android">Android</a>
+                        
+                
+            
+        </div>
 
 
 
@@ -87,7 +128,7 @@ system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/
             <li><a href="/posts/android-smart-pointer/#%e5%bc%ba%e6%8c%87%e9%92%88%e7%b1%bb-sp">强指针类 sp</a></li>
             
                     <ul class="toc-h3">
-                    <ul class="toc-h4"><li><a href="/posts/android-smart-pointer/#%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0-%e9%83%a8%e5%88%86-%e5%92%8c%e6%9e%90%e6%9e%84%e5%87%bd%e6%95%b0">构造函数（部分）和析构函数</a></li>
+                    <ul class="toc-h4"><li><a href="/posts/android-smart-pointer/#%e6%9e%84%e9%80%a0%e5%87%bd%e6%95%b0%e9%83%a8%e5%88%86%e5%92%8c%e6%9e%90%e6%9e%84%e5%87%bd%e6%95%b0">构造函数（部分）和析构函数</a></li>
             <li><a href="/posts/android-smart-pointer/#%e8%b5%8b%e5%80%bc%e8%bf%90%e7%ae%97%e7%ac%a6">赋值运算符</a></li>
             
                     </ul>
@@ -103,30 +144,19 @@ system/core/libutils/include/utils/StrongPointer.h system/core/libutils/include/
             
                     </ul><li><a href="/posts/android-smart-pointer/#%e5%bc%b1%e6%8c%87%e9%92%88%e7%9a%84%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86">弱指针的工作原理</a></li>
             <div class="markdown">
-			
-
-<p>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 <code>Android-8.1.0_r1</code>，不同版本 Android 在这一块的实现差异还是比较小的。</p>
-
+			<p>最近看了下 Android 中智能指针的实现，这里简单记一下。使用的源码是 <code>Android-8.1.0_r1</code>，不同版本 Android 在这一块的实现差异还是比较小的。</p>
 <h2 id="智能指针简介">智能指针简介</h2>
-
 <p>以 C++ 标准库的 <code>shared_ptr</code> 为例，每次有新的 <code>shared_ptr</code> 指向同一个对象，这个对象的引用计数就会加 1；当一个 <code>shared_ptr</code> 不再指向这个对象时，这个对象的引用计数就会减 1；当引用计数减为 0 时，就将这个对象释放掉。实现的大致思路就是在智能指针的构造函数中引用计数加 1，在析构函数中引用计数减 1。</p>
-
 <p>当对象 A 有对象 B 的智能指针作为成员变量，对象 B 也有对象 A 的智能指针作为成员变量时，由于同时只能释放一个对象，尝试释放 A 时，发现 A 还被 B 引用，A 就不会被释放，尝试释放 B 时也是类似的。这样 A 和 B 在程序退出之前就不会被释放掉，实际上造成了内存泄露。</p>
-
 <p>为了解决上面的相互引用问题，又有了 <code>weak_ptr</code> 的概念，<code>weak_ptr</code> 指向一个对象时，不会增加这个对象的（强）引用计数。如果把上面 A 和 B 中的智能指针替换为 <code>weak_ptr</code>，那么相互引用就不会影响对象的释放了。</p>
-
 <p>Android 中的智能指针在行为上跟上面的介绍基本是一致的，有强指针类型 sp 和弱指针类型 wp，对应分别有强引用计数和弱引用计数。智能指针的源码就是下面这三个文件：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">system/core/libutils/include/utils/StrongPointer.h
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">system/core/libutils/include/utils/StrongPointer.h
 system/core/libutils/include/utils/RefBase.h
-system/core/libutils/RefBase.cpp</pre></div>
-<p>其中 <code>StrongPointer.h</code> 中是强指针 sp 这个模板类的定义和实现；<code>RefBase.h</code> 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；<code>RefBase.cpp</code> 中是 RefBase 等几个关键类的实现。</p>
-
+system/core/libutils/RefBase.cpp
+</code></pre></div><p>其中 <code>StrongPointer.h</code> 中是强指针 sp 这个模板类的定义和实现；<code>RefBase.h</code> 中有弱指针 wp 这个模板类的定义和实现，以及 RefBase 等几个关键类的定义；<code>RefBase.cpp</code> 中是 RefBase 等几个关键类的实现。</p>
 <p><strong>这里直接给出包含注释的这几个文件：<a href="https://github.com/zivmc/codebase-public/tree/master/Android/smart_pointer">smart_pointer</a></strong></p>
-
 <p>下面尽量把看这部分代码的顺序和思路讲清楚。</p>
-
 <h2 id="强指针类-sp">强指针类 sp</h2>
-
 <p><code>StrongPointer.h</code> 中给出了强指针类 sp 的定义如下（略去部分）：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 <span style="color:#00f">class</span> <span style="color:#2b91af">sp</span> {
@@ -166,17 +196,14 @@ system/core/libutils/RefBase.cpp</pre></div>
     <span style="color:#2b91af">void</span> set_pointer(T* ptr);
     T* m_ptr;
 };
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li>sp 有一个私有成员变量 <code>m_ptr</code>，<code>m_ptr</code> 就是指向 sp 管理的类型为 T 的对象的指针</li>
 <li>sp 有一组构造函数，可以用 <code>T*</code> 指针、其他 sp 对象的引用初始化，<code>sp(sp&lt;T&gt;&amp;&amp; other)</code> 是一个移动构造函数</li>
 <li>sp 重载了赋值运算符，赋值运算符可用的右操作数跟上面的构造函数是类似的</li>
 <li>sp 重载了解引用运算符 <code>*</code>、成员访问运算符 <code>-&gt;</code>，还提供了 public 函数 <code>get()</code> 获取 <code>m_ptr</code></li>
 </ul>
-
 <p><code>StrongPointer.h</code> 中还有上面这些函数的实现，下面看几个典型的。</p>
-
-<h4 id="构造函数-部分-和析构函数">构造函数（部分）和析构函数</h4>
+<h4 id="构造函数部分和析构函数">构造函数（部分）和析构函数</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 sp&lt;T&gt;::sp(T* other)
         : m_ptr(other) {
@@ -202,11 +229,8 @@ sp&lt;T&gt;::~sp() {
     <span style="color:#00f">if</span> (m_ptr)
         m_ptr-&gt;decStrong(<span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p>从这几个构造函数可以看到，类型 T 需要实现成员函数 <code>incStrong()</code> 和 <code>decStrong()</code>，而管理引用计数的方式也就是在构造函数中强引用计数加 1，在析构函数中强引用计数减 1。</p>
-
+</code></pre></div><p>从这几个构造函数可以看到，类型 T 需要实现成员函数 <code>incStrong()</code> 和 <code>decStrong()</code>，而管理引用计数的方式也就是在构造函数中强引用计数加 1，在析构函数中强引用计数减 1。</p>
 <p>如果是移动构造函数，不需要增加对象的强引用计数，需要把用于初始化的智能指针中的 <code>m_ptr</code> 置为 nullptr。</p>
-
 <h4 id="赋值运算符">赋值运算符</h4>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 sp&lt;T&gt;&amp; sp&lt;T&gt;::<span style="color:#00f">operator</span> =(<span style="color:#00f">const</span> sp&lt;T&gt;&amp; other) {
@@ -229,13 +253,9 @@ sp&lt;T&gt;&amp; sp&lt;T&gt;::<span style="color:#00f">operator</span> =(sp&lt;T
     other.m_ptr = <span style="color:#00f">nullptr</span>;
     <span style="color:#00f">return</span> *<span style="color:#00f">this</span>;
 }
-</code></pre></div>
-<p>赋值运算符的逻辑基本是：运算符左边的智能指针指向的对象的强引用计数减 1，这是因为赋值之后，左边的智能指针就不再指向原本指向的对象了；运算符右边的智能指针指向的对象的强引用计数加 1，这是因为赋值之后，左边的智能指针也会指向右边的智能指针指向的对象。</p>
-
+</code></pre></div><p>赋值运算符的逻辑基本是：运算符左边的智能指针指向的对象的强引用计数减 1，这是因为赋值之后，左边的智能指针就不再指向原本指向的对象了；运算符右边的智能指针指向的对象的强引用计数加 1，这是因为赋值之后，左边的智能指针也会指向右边的智能指针指向的对象。</p>
 <p>如果是移动赋值运算符，不需要增加右边智能指针指向的对象的引用计数，需要把右边智能指针的 <code>m_ptr</code> 置为 nullptr。</p>
-
 <h2 id="弱指针类-wp">弱指针类 wp</h2>
-
 <p>弱指针类的定义和实现位于 <code>RefBase.h</code> 中：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span> &lt;<span style="color:#00f">typename</span> T&gt;
 <span style="color:#00f">class</span> <span style="color:#2b91af">wp</span>
@@ -282,13 +302,11 @@ sp&lt;T&gt;&amp; sp&lt;T&gt;::<span style="color:#00f">operator</span> =(sp&lt;T
     T*              m_ptr;
     weakref_type*   m_refs;
 };
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li>wp 指针类中有两个私有成员变量，一个是 <code>m_ptr</code>，指向弱指针管理的对象，一个是 <code>m_refs</code>，<code>m_refs</code> 类型为 <code>weakref_type*</code>，后面再介绍 <code>weakref_type*</code> 这个类型</li>
 <li>类似 sp，wp 也定义了几组构造函数、几个赋值运算符重载</li>
 <li>弱指针不保证实际指向的对象没有被释放，因此不能直接通过弱指针访问对象，而是需要使用 <code>promote()</code> 函数将弱指针提升成强指针。如果提升成功了，再通过获取到的这个强指针访问对象</li>
 </ul>
-
 <h3 id="构造函数和析构函数">构造函数和析构函数</h3>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 wp&lt;T&gt;::wp(T* other)
@@ -309,17 +327,11 @@ wp&lt;T&gt;::~wp()
 {
     <span style="color:#00f">if</span> (m_ptr) m_refs-&gt;decWeak(<span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p>从构造函数和析构函数中可以看到，<code>m_refs</code> 通过类型 T 的 <code>createWeak()</code> 函数初始化。在构造函数中，弱引用计数加 1，在析构函数中弱引用计数减 1。后面会看到，<code>createWeak()</code> 函数中实际也进行了弱引用计数加 1 的操作。</p>
-
+</code></pre></div><p>从构造函数和析构函数中可以看到，<code>m_refs</code> 通过类型 T 的 <code>createWeak()</code> 函数初始化。在构造函数中，弱引用计数加 1，在析构函数中弱引用计数减 1。后面会看到，<code>createWeak()</code> 函数中实际也进行了弱引用计数加 1 的操作。</p>
 <p>赋值运算符重载的逻辑跟 sp 是类似的，这里就不细看了。</p>
-
 <h2 id="refbase-类">RefBase 类</h2>
-
 <p>前面看到强指针和弱指针这两个模板类对类型参数有一些要求：sp 的 T 需要 <code>incStrong()</code> 和 <code>decStrong()</code> 两个成员函数，wp 的 T 需要成员函数 <code>createWeak()</code>。</p>
-
 <p>RefBase 实现了前面这些需要的类，实际上，只要一个类 A 继承了 RefBase 这个类，就可以通过 <code>sp&lt;A&gt;</code>、<code>wp&lt;A&gt;</code> 的方式创建智能指针，从而通过智能指针来管理对象的释放。</p>
-
 <p>RefBase 的定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">class</span> <span style="color:#2b91af">RefBase</span>
 {
@@ -387,18 +399,14 @@ wp&lt;T&gt;::~wp()
 <span style="color:#00f">private</span>:
     weakref_impl* <span style="color:#00f">const</span> mRefs;
 };
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li>RefBase 类定义了 <code>incStrong()</code>、<code>decStrong()</code>、<code>createWeak()</code> 等函数</li>
 <li>RefBase 类有一个成员变量 mRefs, mRefs 类型是 <code>weakref_impl*</code></li>
 <li>RefBase 中有一个内部类 <code>weakref_type</code>， <code>weakref_type</code> 定义了 <code>incWeak()</code>、<code>decWeak()</code> 等函数</li>
 </ul>
-
 <p>在 <code>RefBase.cpp</code> 中可以看到 <code>weakref_impl</code> 继承自 <code>weakref_type</code> 这个类：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">class</span> <span style="color:#2b91af">RefBase</span>::weakref_impl : <span style="color:#00f">public</span> RefBase::weakref_type
-</code></pre></div>
-<p>wp 中的 <code>m_refs</code> 成员变量类型是 <code>weakref_type*</code>。</p>
-
+</code></pre></div><p>wp 中的 <code>m_refs</code> 成员变量类型是 <code>weakref_type*</code>。</p>
 <p><code>RefBase.cpp</code> 中 <code>weakref_impl</code> 类的定义如下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">class</span> <span style="color:#2b91af">RefBase</span>::weakref_impl : <span style="color:#00f">public</span> RefBase::weakref_type
 {
@@ -425,33 +433,23 @@ wp&lt;T&gt;::~wp()
     <span style="color:#2b91af">void</span> printRefs() <span style="color:#00f">const</span> { }
     <span style="color:#2b91af">void</span> trackMe(<span style="color:#2b91af">bool</span>, <span style="color:#2b91af">bool</span>) { }
 };
-</code></pre></div>
-<p>其中的 mStrong 和 mWeak 成员变量分别就是强引用计数和弱引用计数；mBase 类型是 <code>RefBase*</code>；还有 mFlags。</p>
-
+</code></pre></div><p>其中的 mStrong 和 mWeak 成员变量分别就是强引用计数和弱引用计数；mBase 类型是 <code>RefBase*</code>；还有 mFlags。</p>
 <p>mFlags 在 <code>weakref_impl</code> 的构造函数中被初始化为 0，再看 RefBase 这个类中定义的枚举：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">    <span style="color:#00f">enum</span> {
         OBJECT_LIFETIME_STRONG  = 0x0000, <span style="color:#008000">// 强引用计数为 0 时就释放对象
 </span><span style="color:#008000"></span>        OBJECT_LIFETIME_WEAK    = 0x0001, <span style="color:#008000">// 强引用计数、弱引用计数都为 0 时释放对象
 </span><span style="color:#008000"></span>        OBJECT_LIFETIME_MASK    = 0x0001
     };
-</code></pre></div>
-<p>mFlags 的值通常就是 <code>OBJECT_LIFETIME_STRONG</code> 或者 <code>OBJECT_LIFETIME_WEAK</code>。mFlags 用来决定什么时候释放智能指针管理的对象：</p>
-
+</code></pre></div><p>mFlags 的值通常就是 <code>OBJECT_LIFETIME_STRONG</code> 或者 <code>OBJECT_LIFETIME_WEAK</code>。mFlags 用来决定什么时候释放智能指针管理的对象：</p>
 <ul>
 <li>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code>，那么强引用计数为 0 时就会释放对象</li>
 <li>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，那么当强引用计数和弱引用计数都为 0 时释放对象</li>
 </ul>
-
 <p>到这里智能指针涉及到的 4 个关键类就比较清楚了：</p>
-
-<p><img src="/images/smart_pointer.png" alt="Android 智能指针" /></p>
-
+<p><img src="/images/smart_pointer.png" alt="Android 智能指针"></p>
 <h2 id="强指针的工作原理">强指针的工作原理</h2>
-
 <p>下面再从 RefBase 这个类中各个成员函数的实现，来看一下强指针的工作原理。</p>
-
 <h3 id="sp-构造函数中强引用计数加-1">sp 构造函数中强引用计数加 1</h3>
-
 <p>首先是强指针创建时走到构造函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 sp&lt;T&gt;::sp(T* other)
@@ -459,8 +457,7 @@ sp&lt;T&gt;::sp(T* other)
     <span style="color:#00f">if</span> (other)
         other-&gt;incStrong(<span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p>看到这里就已经知道 <code>other-&gt;incStrong(this)</code> 调用的实际是 <code>RefBase.cpp</code> 中 RefBase 这个类的成员函数 <code>incStrong()</code>:</p>
+</code></pre></div><p>看到这里就已经知道 <code>other-&gt;incStrong(this)</code> 调用的实际是 <code>RefBase.cpp</code> 中 RefBase 这个类的成员函数 <code>incStrong()</code>:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#008000">// 这里的 id 类型是 sp&lt;T&gt; 等，传进来主要是 debug 用的
 </span><span style="color:#008000"></span><span style="color:#2b91af">void</span> RefBase::incStrong(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id) <span style="color:#00f">const</span>
 {
@@ -491,9 +488,7 @@ sp&lt;T&gt;::sp(T* other)
     <span style="color:#008000">// 这里是空函数，子类可以重写这个函数实现回调的效果
 </span><span style="color:#008000"></span>    refs-&gt;mBase-&gt;onFirstRef();
 }
-</code></pre></div>
-<p>关于参数 id，所有实际使用 id 的函数在非 debug 的情况下都是空函数，因此 id 这个参数实际只是开发调试时使用的，后面也不做介绍了。</p>
-
+</code></pre></div><p>关于参数 id，所有实际使用 id 的函数在非 debug 的情况下都是空函数，因此 id 这个参数实际只是开发调试时使用的，后面也不做介绍了。</p>
 <p>这里先把 mRefs 保存到 refs 中，再调用 <code>refs-&gt;incWeak()</code> 函数增加弱引用计数。RefBase 在增加强引用计数之前会先增加弱引用计数，后面看 <code>decStrong()</code> 函数，也能看到强引用计数减 1 之后，弱引用计数也会减 1。<code>refs</code> 类型为 <code>weakref_impl*</code>，因此这里调用的是 <code>weakref_impl</code> 的 <code>incWeak()</code> 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#2b91af">void</span> RefBase::weakref_type::incWeak(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id)
 {
@@ -504,17 +499,11 @@ sp&lt;T&gt;::sp(T* other)
             std::memory_order_relaxed);
     ALOG_ASSERT(c &gt;= 0, <span style="color:#a31515">&#34;incWeak called on %p after last weak ref&#34;</span>, <span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p>mWeak 是 <code>weakref_impl</code> 类中的成员变量，表示弱引用计数，类型是 <code>std::atomic&lt;int32_t&gt;</code>，调用 <code>fetch_add</code> 函数会将 mWeak 加 1，并返回加 1 之前的值。</p>
-
+</code></pre></div><p>mWeak 是 <code>weakref_impl</code> 类中的成员变量，表示弱引用计数，类型是 <code>std::atomic&lt;int32_t&gt;</code>，调用 <code>fetch_add</code> 函数会将 mWeak 加 1，并返回加 1 之前的值。</p>
 <p><code>incStrong()</code> 中弱引用计数加 1 之后，<code>c = refs-&gt;mStrong.fetch_add(1, std::memory_order_relaxed)</code>，强引用计数也会加 1，c 中是加 1 之前的值。</p>
-
 <p>在 <code>weakref_impl</code> 的构造函数中，mStrong 被初始化为 <code>INITIAL_STRONG_VALUE</code>。<code>incStrong()</code> 函数中接下来判断 c 是否为 <code>INITIAL_STRONG_VALUE</code>，如果不是，说明不是第一次调用 <code>incStrong()</code> 函数，<code>incStrong()</code> 函数就返回了，sp 的构造函数那边也就返回了。</p>
-
 <p>如果是第一次调用 <code>incStrong()</code> 函数，mStrong 加 1 之后是 <code>INITIAL_STRONG_VALUE + 1</code>，<code>INITIAL_STRONG_VALUE</code> 值为 <code>1 &lt;&lt; 28</code> 是一个非常大的值，函数返回之前还要把强引用计数修改为 1，也就是 <code>refs-&gt;mStrong.fetch_sub(INITIAL_STRONG_VALUE, std::memory_order_relaxed)</code> 这里。强引用计数修改为 1 之后，<code>incStrong()</code> 函数就返回了，sp 的构造函数也就返回了。</p>
-
 <h3 id="sp-析构函数中强引用计数减-1">sp 析构函数中强引用计数减 1</h3>
-
 <p>sp 的析构函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 sp&lt;T&gt;::~sp() {
@@ -522,8 +511,7 @@ sp&lt;T&gt;::~sp() {
         <span style="color:#008000">// 析构函数，要求类型 T 实现 decStrong 函数
 </span><span style="color:#008000"></span>        m_ptr-&gt;decStrong(<span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p><code>m_ptr</code> 类型为 <code>T*</code> 也就是 <code>RefBase*</code>，这里实际调用 <code>RefBase*</code> 的 <code>decStrong()</code> 函数：</p>
+</code></pre></div><p><code>m_ptr</code> 类型为 <code>T*</code> 也就是 <code>RefBase*</code>，这里实际调用 <code>RefBase*</code> 的 <code>decStrong()</code> 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#2b91af">void</span> RefBase::decStrong(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id) <span style="color:#00f">const</span>
 {
     weakref_impl* <span style="color:#00f">const</span> refs = mRefs;
@@ -560,50 +548,48 @@ sp&lt;T&gt;::~sp() {
 </span><span style="color:#008000"></span>    <span style="color:#008000">// mRefs itself, or it&#39;s running entirely before the final mWeak decrement.
 </span><span style="color:#008000"></span>    refs-&gt;decWeak(id);
 }
-</code></pre></div>
-<p>可以看到，先 <code>refs-&gt;mStrong.fetch_sub(1, std::memory_order_release)</code> 强引用计数减 1，再判断 c 是否为 1（mStrong - 1 之后是否为 0）。如果 mStrong 已经为 0 了：</p>
-
+</code></pre></div><p>可以看到，先 <code>refs-&gt;mStrong.fetch_sub(1, std::memory_order_release)</code> 强引用计数减 1，再判断 c 是否为 1（mStrong - 1 之后是否为 0）。如果 mStrong 已经为 0 了：</p>
 <ol>
 <li>先调用 <code>refs-&gt;mBase-&gt;onLastStrongRef(id)</code> 函数，RefBase 中的 onLastStrongRef 函数实际是空函数，但是子类可以重写这个函数来实现一些类似于回调的效果。后面还会有一些 <code>onXXXYYY</code> 函数，就都不多做介绍了</li>
-
-<li><p>再判断 mFlags 是否为 <code>OBJECT_LIFETIME_STRONG</code>。前面介绍过，如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code>，则当强引用计数为 0 时，就会释放对象。<code>delete this</code> 会调用到 RefBase 的析构函数中。</p>
+<li>再判断 mFlags 是否为 <code>OBJECT_LIFETIME_STRONG</code>。前面介绍过，如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code>，则当强引用计数为 0 时，就会释放对象。<code>delete this</code> 会调用到 RefBase 的析构函数中。</li>
+</ol>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RefBase::~RefBase()
 {
-<span style="color:#2b91af">int32_t</span> flags = mRefs-&gt;mFlags.load(std::memory_order_relaxed);
-<span style="color:#008000">// Life-time of this object is extended to WEAK, in
-</span><span style="color:#008000">// which case weakref_impl doesn&#39;t out-live the object and we
-</span><span style="color:#008000">// can free it now.
-</span><span style="color:#008000"></span><span style="color:#00f">if</span> ((flags &amp; OBJECT_LIFETIME_MASK) == OBJECT_LIFETIME_WEAK) {
-    <span style="color:#008000">// It&#39;s possible that the weak count is not 0 if the object
-</span><span style="color:#008000"></span>    <span style="color:#008000">// re-acquired a weak reference in its destructor
-</span><span style="color:#008000"></span>    <span style="color:#00f">if</span> (mRefs-&gt;mWeak.load(std::memory_order_relaxed) == 0) {
-        <span style="color:#00f">delete</span> mRefs;
+    <span style="color:#2b91af">int32_t</span> flags = mRefs-&gt;mFlags.load(std::memory_order_relaxed);
+    <span style="color:#008000">// Life-time of this object is extended to WEAK, in
+</span><span style="color:#008000"></span>    <span style="color:#008000">// which case weakref_impl doesn&#39;t out-live the object and we
+</span><span style="color:#008000"></span>    <span style="color:#008000">// can free it now.
+</span><span style="color:#008000"></span>    <span style="color:#00f">if</span> ((flags &amp; OBJECT_LIFETIME_MASK) == OBJECT_LIFETIME_WEAK) {
+        <span style="color:#008000">// It&#39;s possible that the weak count is not 0 if the object
+</span><span style="color:#008000"></span>        <span style="color:#008000">// re-acquired a weak reference in its destructor
+</span><span style="color:#008000"></span>        <span style="color:#00f">if</span> (mRefs-&gt;mWeak.load(std::memory_order_relaxed) == 0) {
+            <span style="color:#00f">delete</span> mRefs;
+        }
+    } <span style="color:#00f">else</span> if (mRefs-&gt;mStrong.load(std::memory_order_relaxed)
+            == INITIAL_STRONG_VALUE) {
+        <span style="color:#008000">// We never acquired a strong reference on this object.
+</span><span style="color:#008000"></span>        LOG_ALWAYS_FATAL_IF(mRefs-&gt;mWeak.load() != 0,
+                <span style="color:#a31515">&#34;RefBase: Explicit destruction with non-zero weak &#34;</span>
+                <span style="color:#a31515">&#34;reference count&#34;</span>);
+        <span style="color:#008000">// TODO: Always report if we get here. Currently MediaMetadataRetriever
+</span><span style="color:#008000"></span>        <span style="color:#008000">// C++ objects are inconsistently managed and sometimes get here.
+</span><span style="color:#008000"></span>        <span style="color:#008000">// There may be other cases, but we believe they should all be fixed.
+</span><span style="color:#008000"></span>        <span style="color:#00f">delete</span> mRefs;
     }
-} <span style="color:#00f">else</span> if (mRefs-&gt;mStrong.load(std::memory_order_relaxed)
-        == INITIAL_STRONG_VALUE) {
-    <span style="color:#008000">// We never acquired a strong reference on this object.
-</span><span style="color:#008000"></span>    LOG_ALWAYS_FATAL_IF(mRefs-&gt;mWeak.load() != 0,
-            <span style="color:#a31515">&#34;RefBase: Explicit destruction with non-zero weak &#34;</span>
-            <span style="color:#a31515">&#34;reference count&#34;</span>);
-    <span style="color:#008000">// TODO: Always report if we get here. Currently MediaMetadataRetriever
-</span><span style="color:#008000"></span>    <span style="color:#008000">// C++ objects are inconsistently managed and sometimes get here.
-</span><span style="color:#008000"></span>    <span style="color:#008000">// There may be other cases, but we believe they should all be fixed.
-</span><span style="color:#008000"></span>    <span style="color:#00f">delete</span> mRefs;
+    <span style="color:#008000">// For debugging purposes, clear mRefs.  Ineffective against outstanding wp&#39;s.
+</span><span style="color:#008000"></span>    <span style="color:#00f">const_cast</span>&lt;weakref_impl*&amp;&gt;(mRefs) = NULL;
 }
-<span style="color:#008000">// For debugging purposes, clear mRefs.  Ineffective against outstanding wp&#39;s.
-</span><span style="color:#008000"></span><span style="color:#00f">const_cast</span>&lt;weakref_impl*&amp;&gt;(mRefs) = NULL;
-}
-</code></pre></div></li>
-</ol>
-
-<ul>
-<li><p>大多数情况下，在 RefBase 的析构函数中，mFlags 不是 <code>OBJECT_LIFETIME_WEAK</code>，mStrong 也不是 <code>INITIAL_STRONG_VALUE</code>，会将 mRefs 置为空。</p></li>
-
-<li><p>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，会检查弱引用计数是否为 0，如果是，会 <code>delete mRefs</code>，释放掉 mRefs。</p></li>
-
-<li><p>如果强引用计数是 <code>INITIAL_STRONG_VALUE</code>，说明 RefBase 的子类的对象被初始化过，但是从未有过强指针指向 mRefs，也会释放掉 mRefs。</p></li>
+</code></pre></div><ul>
+<li>
+<p>大多数情况下，在 RefBase 的析构函数中，mFlags 不是 <code>OBJECT_LIFETIME_WEAK</code>，mStrong 也不是 <code>INITIAL_STRONG_VALUE</code>，会将 mRefs 置为空。</p>
+</li>
+<li>
+<p>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，会检查弱引用计数是否为 0，如果是，会 <code>delete mRefs</code>，释放掉 mRefs。</p>
+</li>
+<li>
+<p>如果强引用计数是 <code>INITIAL_STRONG_VALUE</code>，说明 RefBase 的子类的对象被初始化过，但是从未有过强指针指向 mRefs，也会释放掉 mRefs。</p>
+</li>
 </ul>
-
 <p>再回到 <code>decStrong()</code> 函数中，接着会弱引用计数减 1，调用 <code>weakref_type</code> 的 <code>decWeak()</code> 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#2b91af">void</span> RefBase::weakref_type::decWeak(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id)
 {
@@ -651,20 +637,14 @@ sp&lt;T&gt;::~sp() {
         <span style="color:#00f">delete</span> impl-&gt;mBase;
     }
 }
-</code></pre></div>
-<p><code>decWeak()</code> 中弱引用计数减 1 之后，也是先判断弱引用计数是否已经是 0 了，如果不是，说明还有其他弱指针，refs 还不需要释放。</p>
-
+</code></pre></div><p><code>decWeak()</code> 中弱引用计数减 1 之后，也是先判断弱引用计数是否已经是 0 了，如果不是，说明还有其他弱指针，refs 还不需要释放。</p>
 <p>如果减 1 之后弱引用变为了 0：</p>
-
 <ul>
 <li>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code>，而且 mStrong 为 <code>INITIAL_STRONG_VALUE</code>，说明对象只被初始化了，从未被强指针引用过，可能处于将要被使用的状态，就不释放 refs；如果 mStrong 不为 <code>INITIAL_STRONG_VALUE</code>，说明对象被引用过，但现在没有强指针指向这个对象，释放掉 refs。</li>
 <li>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，只有当强、弱引用计数都为 0 时才会释放对象，因此这里会先释放掉 RefBase，RefBase 的析构函数中会释放掉 mRefs。</li>
 </ul>
-
 <p>到这里，强指针相关的工作原理就很清楚了。</p>
-
 <h2 id="弱指针的工作原理">弱指针的工作原理</h2>
-
 <p>弱指针的构造函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 wp&lt;T&gt;::wp(T* other)
@@ -672,18 +652,14 @@ wp&lt;T&gt;::wp(T* other)
 {
     <span style="color:#00f">if</span> (other) m_refs = other-&gt;createWeak(<span style="color:#00f">this</span>);
 }
-</code></pre></div>
-<p>这里的 <code>createWeak()</code> 函数就是 RefBase 的 <code>createWeak()</code> 函数：</p>
+</code></pre></div><p>这里的 <code>createWeak()</code> 函数就是 RefBase 的 <code>createWeak()</code> 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RefBase::weakref_type* RefBase::createWeak(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id) <span style="color:#00f">const</span>
 {
     mRefs-&gt;incWeak(id);
     <span style="color:#00f">return</span> mRefs;
 }
-</code></pre></div>
-<p>实际就是调用了 <code>weakref_type</code> 的 <code>incWeak()</code> 函数，然后返回 mRefs 用来初始化 wp 的 <code>m_refs</code>。</p>
-
+</code></pre></div><p>实际就是调用了 <code>weakref_type</code> 的 <code>incWeak()</code> 函数，然后返回 mRefs 用来初始化 wp 的 <code>m_refs</code>。</p>
 <p>其他的构造函数最终也都是调到 <code>weakref_type</code> 的 <code>incWeak()</code> 函数，析构函数则是调到 <code>weakref_type</code> 的 <code>decWeak()</code> 函数。这两个函数都已经看过了，这里就不再看了。</p>
-
 <p>wp 这边还有一个 <code>promote()</code> 函数值得说一下：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#00f">template</span>&lt;<span style="color:#00f">typename</span> T&gt;
 sp&lt;T&gt; wp&lt;T&gt;::promote() <span style="color:#00f">const</span>
@@ -694,8 +670,7 @@ sp&lt;T&gt; wp&lt;T&gt;::promote() <span style="color:#00f">const</span>
     }
     <span style="color:#00f">return</span> result;
 }
-</code></pre></div>
-<p>promote 函数是尝试通过 wp 获取一个 sp，之后可以通过获取的这个 sp 访问管理的对象，这里会调到 <code>weakref_impl</code> 中的 <code>attemptIncStrong()</code> 函数：</p>
+</code></pre></div><p>promote 函数是尝试通过 wp 获取一个 sp，之后可以通过获取的这个 sp 访问管理的对象，这里会调到 <code>weakref_impl</code> 中的 <code>attemptIncStrong()</code> 函数：</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#2b91af">bool</span> RefBase::weakref_type::attemptIncStrong(<span style="color:#00f">const</span> <span style="color:#2b91af">void</span>* id)
 {
     <span style="color:#008000">// 增加弱引用计数
@@ -800,31 +775,32 @@ sp&lt;T&gt; wp&lt;T&gt;::promote() <span style="color:#00f">const</span>
 
     <span style="color:#00f">return</span> true;
 }
-</code></pre></div>
-<p>类似于 <code>incStrong()</code> 函数，这里也会先弱引用计数加 1，然后会取出 mStrong 保存在 curCount 中。</p>
-
+</code></pre></div><p>类似于 <code>incStrong()</code> 函数，这里也会先弱引用计数加 1，然后会取出 mStrong 保存在 curCount 中。</p>
 <p>如果 curCount &gt; 0 且 mStrong 不为 <code>INITIAL_STRONG_VALUE</code>，说明当前有其他强指针指向这个对象，直接 <code>mStrong.compare_exchange_weak(curCount, curCount+1, std::memory_order_relaxed)</code> 强引用计数加 1 即可。break 之后直接返回了 true，promote 成功。</p>
-
 <p>这里简单介绍一下 <code>compare_exchange_weak(p1, p2, p3)</code> 这个函数：这个函数会先比较 mStrong 与 p1 是否相等，如果相等，会把 p2 赋给 p1 然后返回 true。如果 mStrong 不等于 p1（在这里，就是从保存 mStrong 到运行到这个函数这段时间内，mStrong 被其他的 incStrong、decStrong 等操作修改过），则把 mStrong 赋给 p1 之后返回 false，这样 while 循环就会继续执行下去。使用 <code>compare_exchange_weak</code> 这个函数是为了保证强引用计数加 1 正确地加上去了。</p>
-
 <p>如果 <code>curCount &lt;= 0 || curCount == INITIAL_STRONG_VALUE</code>：</p>
-
 <ul>
-<li><p>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code> 且 <code>curCount &lt;= 0</code>，说明已经没有强指针指向这个对象，对象已经被释放掉了，promote 失败。把刚才加上去的弱引用计数减回去之后返回 false。</p></li>
-
-<li><p>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code> 且 <code>curCount == INITIAL_STRONG_VALUE</code>，说明对象被初始化了，但还没有强指针引用它，这时先强引用计数加 1。加 1 之后再判断一下 <code>curCount</code>，如果小于等于 0，说明其他线程同时释放了这个对象，这时仍然提升失败，把弱引用计数减回去之后返回 false；如果 curCount 大于 0，这时 curCount 为 <code>INITIAL_STRONG_VALUE + 1</code>，跳出 if 判断把 mStrong 置为 1，再返回 true 提升成功。</p></li>
-
-<li><p>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，会调用 RefBase 的子类实现的 onIncStrongAttempted 等函数去提升，如果提升成功了，也会返回 true。</p></li>
+<li>
+<p>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code> 且 <code>curCount &lt;= 0</code>，说明已经没有强指针指向这个对象，对象已经被释放掉了，promote 失败。把刚才加上去的弱引用计数减回去之后返回 false。</p>
+</li>
+<li>
+<p>如果 mFlags 为 <code>OBJECT_LIFETIME_STRONG</code> 且 <code>curCount == INITIAL_STRONG_VALUE</code>，说明对象被初始化了，但还没有强指针引用它，这时先强引用计数加 1。加 1 之后再判断一下 <code>curCount</code>，如果小于等于 0，说明其他线程同时释放了这个对象，这时仍然提升失败，把弱引用计数减回去之后返回 false；如果 curCount 大于 0，这时 curCount 为 <code>INITIAL_STRONG_VALUE + 1</code>，跳出 if 判断把 mStrong 置为 1，再返回 true 提升成功。</p>
+</li>
+<li>
+<p>如果 mFlags 为 <code>OBJECT_LIFETIME_WEAK</code>，会调用 RefBase 的子类实现的 onIncStrongAttempted 等函数去提升，如果提升成功了，也会返回 true。</p>
+</li>
 </ul>
-
 <p>到这里弱指针的工作原理也比较清楚了。</p>
 
-		</div></div>
+		</div>
+		</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>

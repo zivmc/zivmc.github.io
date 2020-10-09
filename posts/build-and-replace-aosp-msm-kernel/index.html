@@ -4,40 +4,64 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Nexus 5X 编译替换 AOSP msm 内核 - Ziv&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta property="og:title" content="Nexus 5X 编译替换 AOSP msm 内核" />
-<meta property="og:description" content="最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。
-下载代码 Google 其实给了编译内核的文档，在这里。
- 上面的链接是 Pixel 之前设备的内核编译方法，Google 为 Pixel 之后的设备做了另一套编译工具，在上面的页面中也可以找到链接。
- 下载 msm 内核代码就直接使用 git：
-git clone https://android.googlesource.com/kernel/msm 如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：
-git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm 下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):
-git branch -a | grep &#34;3.10&#34; | grep &#34;bullhead&#34; | grep &#34;oreo&#34; 从结果中选一个分支 checkout 出来：
-git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。
- 编译内核 编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可：" />
+<meta property="og:description" content="最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zivmc.github.io/posts/build-and-replace-aosp-msm-kernel/" />
 <meta property="article:published_time" content="2019-11-01T10:32:04+08:00" />
 <meta property="article:modified_time" content="2019-11-01T10:32:04+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Nexus 5X 编译替换 AOSP msm 内核"/>
-<meta name="twitter:description" content="最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。
-下载代码 Google 其实给了编译内核的文档，在这里。
- 上面的链接是 Pixel 之前设备的内核编译方法，Google 为 Pixel 之后的设备做了另一套编译工具，在上面的页面中也可以找到链接。
- 下载 msm 内核代码就直接使用 git：
-git clone https://android.googlesource.com/kernel/msm 如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：
-git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm 下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):
-git branch -a | grep &#34;3.10&#34; | grep &#34;bullhead&#34; | grep &#34;oreo&#34; 从结果中选一个分支 checkout 出来：
-git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。
- 编译内核 编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可："/>
-<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:500,100,300" rel="stylesheet">
+<meta name="twitter:description" content="最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" /><script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script><script src="https://zivmc.github.io/js/main.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="https://zivmc.github.io/css/main.css" />
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://zivmc.github.io/js/main.js"></script>
 </head>
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <body>
 	<div class="container wrapper post">
 		<div class="header">
-	<h1 class="site-title">Ziv&#39;s Blog</h1>
+	<base href="https://zivmc.github.io/">
+	<h1 class="site-title"><a href="https://zivmc.github.io/">Ziv&#39;s Blog</a></h1>
 	<div class="site-description"><h2>Notes taken for future reference.</h2><nav class="nav social">
 			<ul class="flat"><a href="https://github.com/zivmc" title="Github"><i data-feather="github"></i></a><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></ul>
 		</nav>
@@ -77,15 +101,27 @@ git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分�
 
     <div class="post-header">
         <h1 class="title">Nexus 5X 编译替换 AOSP msm 内核</h1>
-        <div class="meta">Posted at &mdash; Nov 1, 2019</div>
+        <div class="meta">
+            Posted &mdash; Nov 1, 2019&nbsp;&nbsp;
             
-            Categories &#x5b;
-            <a href="https://zivmc.github.io/categories/tech/">tech</a>
-            &#x5d;
-            Tags &#x5b;
-            <a href="https://zivmc.github.io/tags/kernel/">kernel</a>
-            <a href="https://zivmc.github.io/tags/android/">Android</a>
-            &#x5d;
+                
+                    Category &mdash;
+                        
+                        <a href="/categories/tech">tech</a>
+                        
+                
+            &nbsp;&nbsp;
+            
+                
+                    Tag &mdash;
+                        
+                        <a href="/tags/kernel">kernel</a>
+                        
+                        <a href="/tags/android">Android</a>
+                        
+                
+            
+        </div>
 
 
 
@@ -94,68 +130,59 @@ git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1  上面这个分�
             <li><a href="/posts/build-and-replace-aosp-msm-kernel/#%e7%bc%96%e8%af%91%e5%86%85%e6%a0%b8">编译内核</a></li>
             <li><a href="/posts/build-and-replace-aosp-msm-kernel/#%e6%9b%bf%e6%8d%a2%e5%86%85%e6%a0%b8">替换内核</a></li>
             <div class="markdown">
-			
-
-<p>最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。</p>
-
+			<p>最近开始看 《Android 系统源代码情景分析》这本书，手上有一个 Nexus 5X 用来调试。这里记录一下编译替换内核的方法。</p>
 <h2 id="下载代码">下载代码</h2>
-
 <p>Google 其实给了编译内核的文档，<a href="https://source.android.com/setup/build/building-kernels-deprecated">在这里</a>。</p>
-
 <blockquote>
 <p>上面的链接是 Pixel 之前设备的内核编译方法，Google 为 Pixel 之后的设备做了另一套编译工具，在上面的页面中也可以找到链接。</p>
 </blockquote>
-
 <p>下载 msm 内核代码就直接使用 git：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git clone https://android.googlesource.com/kernel/msm</pre></div>
-<p>如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm</pre></div>
-<p>下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git branch -a | grep &#34;3.10&#34; | grep &#34;bullhead&#34; | grep &#34;oreo&#34;</pre></div>
-<p>从结果中选一个分支 checkout 出来：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1</pre></div>
-<blockquote>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">git clone https://android.googlesource.com/kernel/msm
+</code></pre></div><p>如果是其他设备，就下载对应的 git 仓库。内核代码也可以用国内的 AOSP 镜像，如：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">git clone https://aosp.tuna.tsinghua.edu.cn/kernel/msm
+</code></pre></div><p>下载代码之后需要找一个对应 Nexus 5X 的分支。我这里 Nexus 5X 刷的是 android-8.1.0_r1 (aosp_bullhead-userdebug):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">git branch -a | grep &#34;3.10&#34; | grep &#34;bullhead&#34; | grep &#34;oreo&#34;
+</code></pre></div><p>从结果中选一个分支 checkout 出来：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">git checkout remotes/origin/android-msm-bullhead-3.10-oreo-mr1
+</code></pre></div><blockquote>
 <p>上面这个分支实测在 Nexus 5X, android-8.1.0_r1, aosp_bullhead-userdebug 上可以正常使用。有些分支可能出现编译刷入后系统正确启动的情况。</p>
 </blockquote>
-
 <h2 id="编译内核">编译内核</h2>
-
 <p>编译内核需要 arm 的交叉编译工具链，使用设备镜像对应 Android 源码目录下的即可：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-*</pre></div>
-<p>设置编译需要的两个环境变量：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">export ARCH=arm64
-export CROSS_COMPILE=/path/to/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-</pre></div>
-<p>CROSS_COMPILE 的路径需要替换为实际的路径。也可以先到 Android 源码中 <code>source build/envsetup.sh</code>，<code>lunch aosp_bullhead-userdebug</code>。这样就只需要：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">export CROSS_COMPILE=aarch64-linux-android-</pre></div>
-<p>lunch 之后也方便后面使用 fastboot 等命令。</p>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-*
+</code></pre></div><p>设置编译需要的两个环境变量：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">export ARCH=arm64
+export CROSS_COMPILE=/path/to/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+</code></pre></div><p>CROSS_COMPILE 的路径需要替换为实际的路径。也可以先到 Android 源码中 <code>source build/envsetup.sh</code>，<code>lunch aosp_bullhead-userdebug</code>。这样就只需要：</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">export CROSS_COMPILE=aarch64-linux-android-
+</code></pre></div><p>lunch 之后也方便后面使用 fastboot 等命令。</p>
 <p>ARCH 和 CROSS_COMPILE 这两个环境变量引入之后，在内核代码根目录下执行的命令就开始编译了：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">make bullhead_defconfig
-make</pre></div>
-<p>编译可能会提示 &ldquo;xxx command not found&rdquo; 之类的错误，根据提示把缺少的工具安装之后重新编译即可。</p>
-
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">make bullhead_defconfig
+make
+</code></pre></div><p>编译可能会提示 &ldquo;xxx command not found&rdquo; 之类的错误，根据提示把缺少的工具安装之后重新编译即可。</p>
 <h2 id="替换内核">替换内核</h2>
-
 <p>编译出的内核文件位于 arch/arm64/boot/Image.gz-dtb。</p>
-
 <p>现在到 Android 源码下面重新编译 boot.img:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">export TARGET_PREBUILT_KERNEL=/path/to/arch/arm64/boot/Image.gz-dtb
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">export TARGET_PREBUILT_KERNEL=/path/to/arch/arm64/boot/Image.gz-dtb
 source build/envsetup.sh
 lunch aosp_bullhead-userdebug
-make bootimage</pre></div>
-<p>TARGET_PREBUILT_KERNEL 修改为正确的路径，lunch 的版本是编译 Android 镜像的版本。</p>
-
+make bootimage
+</code></pre></div><p>TARGET_PREBUILT_KERNEL 修改为正确的路径，lunch 的版本是编译 Android 镜像的版本。</p>
 <p>上面命令正确运行后，就编译出了新的 boot.img，fastboot 刷到设备中即可：</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cd $OUT
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">cd $OUT
 adb reboot bootloader
 fastboot flash boot boot.img
-fastboot reboot</pre></div>
-		</div></div>
+fastboot reboot
+</code></pre></div>
+		</div>
+		</div>
 	<div class="footer wrapper">
 	<nav class="nav">
-		<div><a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+		<div> <a href="https://github.com/zivmc/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
 	</nav>
 </div>
+
+
 
 <script>feather.replace()</script>
 </body>
